@@ -11,7 +11,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar color="white" height="24" dense fixed flat clipped-left app>
+    <v-app-bar color="white" dense fixed flat clipped-left app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">Sumomine</span>
@@ -27,9 +27,9 @@
         />
       </v-layout>
     </v-app-bar>
-    <v-content>
+    <v-main>
       <Nuxt />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

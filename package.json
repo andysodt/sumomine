@@ -1,0 +1,24 @@
+{
+  "name": "Sumomine",
+  "version": "1.0.0",
+  "description": "Sumomine",
+  "author": "Andrew Sodt",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/apollo": "latest",
+    "apollo-cache-inmemory": "latest",
+    "core-js": "latest",
+    "cross-env": "latest",
+    "graphql-tag": "latest",
+    "nuxt": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

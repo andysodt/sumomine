@@ -16,8 +16,7 @@
     "core-js": "latest",
     "cross-env": "latest",
     "graphql-tag": "latest",
-    "nuxt": "latest",
-    "vue-virtual-table": "latest"
+    "nuxt": "latest"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "latest",

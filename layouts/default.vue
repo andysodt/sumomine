@@ -1,55 +1,56 @@
 <template>
-  <div>
-    <nuxt />
-  </div>
+  <v-app dark>
+    <v-navigation-drawer v-model="drawer" clipped app>
+      <v-list>
+        <v-list-item v-for="item in items" :key="item.text" link>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.text }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar color="white" height="24" dense fixed flat clipped-left app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-toolbar-title class="mr-5 align-center">
+        <span class="title">Sumomine</span>
+      </v-toolbar-title>
+      <v-spacer />
+      <v-layout row align-center>
+        <v-text-field
+          placeholder="Search..."
+          single-line
+          append-icon="mdi-magnify"
+          color="black"
+          hide-details
+        />
+      </v-layout>
+    </v-app-bar>
+    <v-content>
+      <Nuxt />
+    </v-content>
+  </v-app>
 </template>
 
-<style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 1;
-}
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
-}
+<style scoped>
 </style>
+
+<script>
+export default {
+  head: {
+    title: 'Sumomine'
+  },
+  data () {
+    return {
+      drawer: true,
+      items: [
+        { text: 'News', link: 'kimarite'  },
+        { text: 'Banzuke', link: 'kimarite'  },
+        { text: 'Kimarite', link: 'kimarite' },
+        { text: 'Rikishi', link: 'rikishi'  }
+      ]
+    }
+  }
+}
+</script>

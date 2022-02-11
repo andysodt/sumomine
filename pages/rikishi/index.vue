@@ -1,30 +1,24 @@
 <template>
-  <div>
-    <h3>Rikishi</h3>
-    <ul>
-      <li v-for="item in rikishi" :key="item.id">
-        <nuxt-link :to="`/rikishi/${item.id}`">
-          {{ item.shikona }} {{ item.heya }}
-        </nuxt-link>        
-      </li>
-    </ul>
-  </div>
+  <vue-virtual-table :config="tableConfig" :data="tableData">
+  </vue-virtual-table>
 </template>
 
 <script>
-import rikishi from '~/apollo/queries/fetchRikishi'
-
+import rikishi from "~/apollo/queries/fetchRikishi";
+import VueVirtualTable from "vue-virtual-table";
 export default {
-  apollo: {
-    rikishi: {
-      prefetch: true,
-      query: rikishi
-    }
+  components: {
+    VueVirtualTable,
   },
-  head: {
-    title: 'Rikishi'
-  }
-}
+  data: () => ({
+    tableConfig: [{ prop: "shikona" }, { prop: "heya" }],
+    tableData: [
+      { shikona: "a1", heya: 20 },
+      { shikona: "a2", heya: 21 },
+      { shikona: "a3", heya: 23 },
+    ],
+  })
+};
 </script>
 
 <style>

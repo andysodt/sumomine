@@ -1,7 +1,6 @@
 const pkg = require('./package')
 
 module.exports = {
-  mode: 'universal',
 
   /*
   ** Headers of the page
@@ -41,6 +40,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: ['@nuxtjs/apollo', '@nuxtjs/vuetify'],
+  
   // Give apollo module options
   apollo: {
     cookieAttributes: {

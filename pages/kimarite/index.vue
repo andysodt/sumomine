@@ -1,44 +1,39 @@
 <template>
-  <div>
-    <h3>Kimarite</h3>
-    <ul>
-      <li v-for="item in kimarite" :key="item.id">
-        <nuxt-link :to="`/kimarite/${item.id}`">
-          {{ item.name }} {{ item.name_eng }}
-        </nuxt-link>        
-      </li>
-    </ul>
+  <div class="">
+    <h1 style="text-align: center">Kimarite</h1>
+    <v-data-table
+      :page="page"
+      :pageCount="numberOfPages"
+      :headers="headers"
+      :items="kimarite"
+      :options.sync="options"
+      :server-items-length="totalPassengers"
+      :loading="loading"
+      class="elevation-1"
+    >
+      <template v-slot:item.name="{ item }">
+        {{ item.name }}
+      </template>
+      <template v-slot:item.name_eng="{ item }">
+        {{ item.name_eng }}
+      </template>
+    </v-data-table>
   </div>
 </template>
 
+
 <script>
-import kimarite from '~/apollo/queries/fetchKimarite'
+import kimarite from "~/apollo/queries/fetchKimarite";
 
 export default {
   apollo: {
     kimarite: {
       prefetch: true,
-      query: kimarite
-    }
+      query: kimarite,
+    },
   },
   head: {
-    title: 'Kimarite'
-  }
-}
+    title: "Kimarite",
+  },
+};
 </script>
-
-<style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-}
-a {
-  text-decoration: none;
-  color: #005a69;
-}
-a:hover {
-  border-bottom: 1px solid;
-}
-</style>

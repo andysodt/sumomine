@@ -5,7 +5,7 @@
       <p>{{ item.description }} {{ item.description_eng }}</p>
       <p>
         <nuxt-link to="/">
-          Home page
+          Home
         </nuxt-link>
       </p>
     </div>

@@ -30,8 +30,8 @@ export default {
 <style>
 ul {
   list-style-type: none;
-  margin: 10;
-  padding: 10;
+  margin: 0;
+  padding: 0;
   line-height: 1.6;
 }
 a {

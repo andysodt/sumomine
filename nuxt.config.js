@@ -40,7 +40,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: ['@nuxtjs/apollo', '@nuxtjs/vuetify'],
-  
+
   // Give apollo module options
   apollo: {
     cookieAttributes: {
@@ -64,7 +64,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      
+
     }
   }
 }

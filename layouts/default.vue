@@ -11,7 +11,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar color="white" dense fixed clipped-left app>
+    <v-app-bar color="white" flat dense fixed clipped-left app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">Sumomine</span>

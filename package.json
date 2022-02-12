@@ -4,23 +4,31 @@
   "description": "Sumomine",
   "author": "Andrew Sodt",
   "private": true,
+  "license": "(MIT OR Apache-2.0)",
+
+  "engines": {
+    "node": ">=12.13.0 <17.0"
+  },
+
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
   },
+  
   "dependencies": {
-    "node": "^15.0.0",
-    "@nuxtjs/apollo": "^4.0.1-rc.5",
-    "apollo-cache-inmemory": "^1.6.5",
-    "core-js": "^2.6.6",
-    "cross-env": "^6.0.3",
-    "graphql-tag": "^2.10.1",
-    "nuxt": "^2.11.0"
+    "@nuxtjs/apollo": "latest",
+    "apollo-cache-inmemory": "latest",
+    "core-js": "latest",
+    "cross-env": "latest",
+    "graphql-tag": "latest",
+    "nuxt": "latest"
   },
+
+  
   "devDependencies": {
     "@nuxtjs/vuetify": "latest",
-    "nodemon": "^2.0.2"
+    "nodemon": "latest"
   }
 }

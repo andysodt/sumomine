@@ -6,6 +6,6 @@ export default function(context){
     		credentials: 'same-origin'
   		},
   		cache: new InMemoryCache(),
-	    wsEndpoint: 'ws://198.199.93.139/v1/graphql',
+	    wsEndpoint: 'wss://198.199.93.139/v1/graphql',
   	}
 }

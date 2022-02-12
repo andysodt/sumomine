@@ -8,6 +8,23 @@
 </template>
 
 <script>
+import kimarite from "~/apollo/queries/fetchKimarite";
+
+export default {
+  apollo: {
+    kimarite: {
+      prefetch: true,
+      query: kimarite,
+    },
+  },
+  head: {
+    title: "Kimarite",
+  },
+};
+</script>
+
+
+<script>
   export default {
     data () {
       return {

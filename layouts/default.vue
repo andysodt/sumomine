@@ -8,7 +8,9 @@
       <v-layout row align-center>
         <nuxt-link  :to="`/news`">Live</nuxt-link>
         <v-spacer />
-        <nuxt-link  :to="`/news`">Basho</nuxt-link>
+        <nuxt-link  :to="`/basho`">Basho</nuxt-link>
+        <v-spacer />
+        <nuxt-link  :to="`/banzuke`">Banzuke</nuxt-link>
         <v-spacer />
         <nuxt-link :to="`/kimarite`">Kimarite</nuxt-link>
         <v-spacer />

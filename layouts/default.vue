@@ -42,9 +42,9 @@ export default {
     return {
       drawer: true,
       items: [
-        { text: 'news', link: '/news' },
-        { text: 'kimarite', link: '/kimarite' },
-        { text: 'rikishi', link: '/rikishi' }
+        { text: 'news', link: '/' },
+        { text: '決まり手 kimarite', link: '/kimarite' },
+        { text: '力士 rikishi', link: '/rikishi' }
       ]
     }
   }

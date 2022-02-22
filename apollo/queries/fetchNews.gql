@@ -1,0 +1,9 @@
+query {
+    kimarite {
+    	id
+		name
+    	name_eng
+		description
+		description_eng
+    }
+}

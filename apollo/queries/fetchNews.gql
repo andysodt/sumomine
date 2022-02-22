@@ -1,9 +1,7 @@
 query {
-    kimarite {
+    news {
     	id
-		name
-    	name_eng
-		description
-		description_eng
+		title
+    	content
     }
 }

@@ -4,7 +4,14 @@
     :items="links"
     :items-per-page="500"
     class="elevation-1"
-  ></v-data-table>
+  >
+    <template #item.name="{ item }">
+      <a target="_blank" :href="item.url">
+        {{ item.name }}
+      </a>
+    </template>
+
+  </v-data-table>
 </template>
 
 <script>
@@ -25,12 +32,6 @@ export default {
           align: "start",
           sortable: true,
           value: "description",
-        },
-        {
-          text: "Url",
-          align: "start",
-          sortable: true,
-          value: "url",
         },
       ],
       links: [],

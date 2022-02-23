@@ -1,0 +1,7 @@
+query {
+    heya {
+    	id
+		  name
+      name_eng
+    }
+}

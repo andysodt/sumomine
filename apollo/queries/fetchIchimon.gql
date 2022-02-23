@@ -1,0 +1,7 @@
+query {
+    ichimon {
+    	id
+	    name
+        name_eng
+    }
+}

@@ -3,5 +3,11 @@ query {
     	id
 		shikona
     	heya
+		shusshin
+		birth_date
+		highest_rank
+		intai
+		hatsu_dohyo
+		last_shikona
     }
 }

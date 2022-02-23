@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="rikishi"
-    :items-per-page="15"
+    :items-per-page="500"
     class="elevation-1"
   ></v-data-table>
 </template>

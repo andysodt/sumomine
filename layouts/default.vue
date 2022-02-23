@@ -47,6 +47,7 @@ export default {
         { text: '力士 rikishi', link: '/rikishi' },
         { text: '部屋 heya', link: '/heya' },
         { text: '一門 ichimon', link: '/ichimon' },
+        { text: 'links', link: '/links' },
       ]
     }
   }

@@ -1,39 +1,45 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="news"
+    :items="links"
     :items-per-page="500"
     class="elevation-1"
   ></v-data-table>
 </template>
 
 <script>
-import news from "~/apollo/queries/fetchNews";
+import links from "~/apollo/queries/fetchLinks";
 
 export default {
   data() {
     return {
       headers: [
         {
-          text: "Title",
+          text: "Name",
           align: "start",
           sortable: true,
-          value: "title",
+          value: "name",
         },
         {
-          text: "Content",
+          text: "Description",
           align: "start",
           sortable: true,
-          value: "content",
+          value: "description",
+        },
+        {
+          text: "Url",
+          align: "start",
+          sortable: true,
+          value: "url",
         },
       ],
-      news: [],
+      links: [],
     };
   },
   apollo: {
-    news: {
+    links: {
       prefetch: true,
-      query: news,
+      query: links,
     },
   },
 };

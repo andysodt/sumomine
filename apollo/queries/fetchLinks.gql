@@ -1,0 +1,8 @@
+query {
+    links {
+    	id
+		name
+        url
+        description
+    }
+}

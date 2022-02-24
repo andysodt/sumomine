@@ -45,6 +45,7 @@ export default {
         { text: 'news', link: '/' },
         { text: '決まり手 kimarite', link: '/kimarite' },
         { text: '力士 rikishi', link: '/rikishi' },
+        { text: '力士 kabu', link: '/kabu' },
         { text: '部屋 heya', link: '/heya' },
         { text: '一門 ichimon', link: '/ichimon' },
         { text: 'links', link: '/links' },

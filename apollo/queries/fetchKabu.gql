@@ -1,0 +1,7 @@
+query {
+    kabu {
+    	id
+		name
+        name_eng
+    }
+}

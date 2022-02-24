@@ -1,7 +1,6 @@
 query {
-    heya {
-    	id
-		  name
-      name_eng
-    }
+  heya {
+    name
+    name_eng
+  }
 }

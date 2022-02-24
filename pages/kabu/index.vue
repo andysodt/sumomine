@@ -15,7 +15,13 @@ export default {
     return {
       headers: [
         {
-          text: "Name",
+          text: "年寄株",
+          align: "start",
+          sortable: true,
+          value: "name",
+        },
+        {
+          text: "Kabu",
           align: "start",
           sortable: true,
           value: "name_eng",

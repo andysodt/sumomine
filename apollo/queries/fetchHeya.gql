@@ -1,6 +1,12 @@
 query {
-  heya {
-    name
-    name_eng
+    heya_ichimon {
+      heya {
+        name
+        name_eng
+      }
+      ichimon {
+        name
+        name_eng
+      }
   }
 }

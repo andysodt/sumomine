@@ -1,14 +1,14 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="heya"
+    :items="heya_ichimon"
     :items-per-page="500"
     class="elevation-1"
   ></v-data-table>
 </template>
 
 <script>
-import heya from "~/apollo/queries/fetchHeya";
+import heya_ichimon from "~/apollo/queries/fetchHeya";
 
 export default {
   data() {
@@ -18,22 +18,34 @@ export default {
           text: "部屋",
           align: "start",
           sortable: true,
-          value: "name",
+          value: "heya.name",
         },
         {
           text: "Heya",
           align: "start",
           sortable: true,
-          value: "name_eng",
+          value: "heya.name_eng",
+        },
+        {
+          text: "一門",
+          align: "start",
+          sortable: true,
+          value: "ichimon.name",
+        },
+        {
+          text: "Ichimon",
+          align: "start",
+          sortable: true,
+          value: "ichimon.name_eng",
         },
       ],
-      heya: [],
+      heya_ichimon: [],
     };
   },
   apollo: {
-    heya: {
+    heya_ichimon: {
       prefetch: true,
-      query: heya,
+      query: heya_ichimon,
     },
   },
 };

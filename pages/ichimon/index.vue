@@ -15,6 +15,12 @@ export default {
     return {
       headers: [
         {
+          text: "一門",
+          align: "start",
+          sortable: true,
+          value: "name",
+        },
+        {
           text: "Name",
           align: "start",
           sortable: true,

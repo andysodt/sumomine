@@ -4,7 +4,14 @@
     :items="rikishi"
     :items-per-page="500"
     class="elevation-1"
-  ></v-data-table>
+  >
+
+    <template #item.image="{ item }">
+      <img :height="100" :src="item.image">
+    </template>
+
+  </v-data-table>
+
 </template>
 
 <script>
@@ -61,6 +68,12 @@ export default {
           align: "start",
           sortable: true,
           value: "last_shikona",
+        },
+        {
+          text: "Image",
+          align: "start",
+          sortable: true,
+          value: "image",
         },		
       ],
       rikishi: [],

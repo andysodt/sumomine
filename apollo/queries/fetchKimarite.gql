@@ -1,9 +1,14 @@
 query {
-    kimarite {
-    	id
-		name
-    	name_eng
-		description
-		description_eng
+  kimarite {
+    description
+    description_eng
+    id
+    image
+    name
+    name_eng
+    kimarite_type {
+      name
+      name_eng
     }
+  }
 }

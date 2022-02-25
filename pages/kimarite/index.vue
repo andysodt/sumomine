@@ -4,7 +4,12 @@
     :items="kimarite"
     :items-per-page="500"
     class="elevation-1"
-  ></v-data-table>
+  >
+    <template #item.image="{ item }">
+      <img :height="100" :src="item.image" />
+    </template>
+
+  </v-data-table>
 </template>
 
 <script>
@@ -27,10 +32,28 @@ export default {
           value: "name_eng",
         },
         {
+          text: "Catagory",
+          align: "start",
+          sortable: true,
+          value: "kimarite_type.name",
+        },
+        {
+          text: "Catagory",
+          align: "start",
+          sortable: true,
+          value: "kimarite_type.name_eng",
+        },
+        {
           text: "Description",
           align: "start",
           sortable: true,
           value: "description_eng",
+        },
+        {
+          text: "Image",
+          align: "start",
+          sortable: true,
+          value: "image",
         },
       ],
       kimarite: [],

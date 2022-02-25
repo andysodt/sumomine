@@ -9,5 +9,6 @@ query {
 		intai
 		hatsu_dohyo
 		last_shikona
+		image
     }
 }

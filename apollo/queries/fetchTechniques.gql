@@ -1,0 +1,9 @@
+query {
+    techniques {
+    	id
+	    name
+        name_eng
+        description_eng
+        image
+    }
+}

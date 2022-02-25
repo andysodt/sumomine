@@ -44,6 +44,7 @@ export default {
       items: [
         { text: 'news', link: '/' },
         { text: '決まり手 kimarite', link: '/kimarite' },
+        { text: 'り手 techniques', link: '/techniques' },
         { text: '力士 rikishi', link: '/rikishi' },
         { text: '年寄株 kabu', link: '/kabu' },
         { text: '部屋 heya', link: '/heya' },

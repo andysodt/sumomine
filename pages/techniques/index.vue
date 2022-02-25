@@ -1,48 +1,34 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="kimarite"
+    :items="techniques"
     :items-per-page="500"
     class="elevation-1"
   >
     <template #item.image="{ item }">
       <img :height="100" :src="item.image" />
     </template>
-
   </v-data-table>
 </template>
 
 <script>
-import kimarite from "~/apollo/queries/fetchKimarite";
+import techniques from "~/apollo/queries/fetchTechniques";
 
 export default {
   data() {
     return {
       headers: [
         {
-          text: "決まり手",
+          text: "年寄株",
           align: "start",
           sortable: true,
           value: "name",
-        },
-        {
-          text: "Catagory",
-          align: "start",
-          sortable: true,
-          value: "kimarite_type.name",
         },
         {
           text: "Technique",
           align: "start",
           sortable: true,
           value: "name_eng",
-        },
-
-        {
-          text: "Catagory",
-          align: "start",
-          sortable: true,
-          value: "kimarite_type.name_eng",
         },
         {
           text: "Description",
@@ -57,13 +43,13 @@ export default {
           value: "image",
         },
       ],
-      kimarite: [],
+      techniques: [],
     };
   },
   apollo: {
-    kimarite: {
+    techniques: {
       prefetch: true,
-      query: kimarite,
+      query: techniques,
     },
   },
 };

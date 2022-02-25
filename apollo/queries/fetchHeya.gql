@@ -1,12 +1,16 @@
 query {
     heya_ichimon {
+      date_joined
+      date_quit
       heya {
         name
         name_eng
+        image
       }
       ichimon {
         name
         name_eng
       }
+
   }
 }

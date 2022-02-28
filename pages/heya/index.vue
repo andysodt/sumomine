@@ -25,16 +25,16 @@ export default {
           value: "heya.name",
         },
         {
-          text: "Heya",
-          align: "start",
-          sortable: true,
-          value: "heya.name_eng",
-        },
-        {
           text: "一門",
           align: "start",
           sortable: true,
           value: "ichimon.name",
+        },
+        {
+          text: "Heya",
+          align: "start",
+          sortable: true,
+          value: "heya.name_eng",
         },
         {
           text: "Ichimon",

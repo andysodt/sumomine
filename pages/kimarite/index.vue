@@ -1,15 +1,29 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="kimarite"
-    :items-per-page="500"
-    class="elevation-1"
-  >
-    <template #item.image="{ item }">
-      <img :height="100" :src="item.image" />
-    </template>
-
-  </v-data-table>
+  <v-card>
+    <v-card-title>
+      決まり手 kimarite
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+      :headers="headers"
+      :items="kimarite"
+      :items-per-page="500"
+      :multi-sort="true"
+      :search="search"
+      class="elevation-1"
+    >
+      <template #item.image="{ item }">
+        <img :height="100" :src="item.image" />
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -18,6 +32,7 @@ import kimarite from "~/apollo/queries/fetchKimarite";
 export default {
   data() {
     return {
+      search: '',
       headers: [
         {
           text: "決まり手",

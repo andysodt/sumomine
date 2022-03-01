@@ -6,7 +6,7 @@
           <v-list-item-content>
             <nuxt-link :to="`${item.link}`">
               {{ item.text }}
-            </nuxt-link> 
+            </nuxt-link>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -16,16 +16,6 @@
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">sumomine</span>
       </v-toolbar-title>
-      <v-spacer />
-      <v-layout row align-center style="max-width: 650px">
-        <v-text-field
-          placeholder="Search..."
-          single-line
-          append-icon="mdi-magnify"
-          color="white"
-          hide-details
-        />
-      </v-layout>
     </v-app-bar>
     <v-main>
       <Nuxt />
@@ -42,16 +32,16 @@ export default {
     return {
       drawer: true,
       items: [
-        { text: 'news', link: '/' },
-        { text: '決まり手 kimarite', link: '/kimarite' },
-        { text: 'り手 techniques', link: '/techniques' },
-        { text: '力士 rikishi', link: '/rikishi' },
-        { text: '年寄株 kabu', link: '/kabu' },
-        { text: '部屋 heya', link: '/heya' },
-        { text: '一門 ichimon', link: '/ichimon' },
-        { text: 'links', link: '/links' },
-      ]
-    }
-  }
-}
+        { text: "news", link: "/" },
+        { text: "決まり手 kimarite", link: "/kimarite" },
+        { text: "り手 techniques", link: "/techniques" },
+        { text: "力士 rikishi", link: "/rikishi" },
+        { text: "年寄株 kabu", link: "/kabu" },
+        { text: "部屋 heya", link: "/heya" },
+        { text: "一門 ichimon", link: "/ichimon" },
+        { text: "links", link: "/links" },
+      ],
+    };
+  },
+};
 </script>

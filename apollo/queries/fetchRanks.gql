@@ -1,0 +1,9 @@
+query {
+    ranks {
+    	id
+	    title
+        title_eng
+		code
+		power
+    }
+}

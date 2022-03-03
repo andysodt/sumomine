@@ -36,6 +36,7 @@ export default {
         { text: "決まり手 kimarite", link: "/kimarite" },
         { text: "り手 techniques", link: "/techniques" },
         { text: "力士 rikishi", link: "/rikishi" },
+        { text: "ranks", link: "/ranks" },
         { text: "年寄株 kabu", link: "/kabu" },
         { text: "部屋 heya", link: "/heya" },
         { text: "一門 ichimon", link: "/ichimon" },

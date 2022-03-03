@@ -33,12 +33,13 @@ export default {
       drawer: true,
       items: [
         { text: "news", link: "/" },
+        { text: "番付 banzuke", link: "/banzuke" },
+        { text: "取組 torikumi", link: "/torikumi" },
         { text: "決まり手 kimarite", link: "/kimarite" },
         { text: "り手 techniques", link: "/techniques" },
         { text: "力士 rikishi", link: "/rikishi" },
         { text: "年寄株 kabu", link: "/kabu" },
         { text: "部屋 heya", link: "/heya" },
-        { text: "一門 ichimon", link: "/ichimon" },
         { text: "links", link: "/links" },
       ],
     };

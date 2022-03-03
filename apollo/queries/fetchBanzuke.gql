@@ -1,0 +1,10 @@
+query {
+    banzuke {
+    	id
+	    name
+        name_eng
+        start_date
+        end_date
+        location
+    }
+}

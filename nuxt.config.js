@@ -39,8 +39,15 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/apollo', '@nuxtjs/vuetify'],
+  modules: ['@nuxtjs/apollo', '@nuxtjs/vuetify', '@nuxt/http'],
 
+  /*
+  ** HTTP module configuration
+  */
+  http: {
+    // See https://http.nuxtjs.org/api/#options
+  },
+  
   // Give apollo module options
   apollo: {
     cookieAttributes: {

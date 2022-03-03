@@ -32,7 +32,8 @@ export default {
     return {
       drawer: true,
       items: [
-        { text: "news", link: "/" },
+        { text: "live", link: "/" },
+        { text: "news", link: "/news" },
         { text: "番付 banzuke", link: "/banzuke" },
         { text: "取組 torikumi", link: "/torikumi" },
         { text: "決まり手 kimarite", link: "/kimarite" },

@@ -608,20 +608,21 @@ INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序二�
 INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序二段', 'Jonidan',  'Jd100e', 5, 606);
 INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序二段', 'Jonidan',  'Jd100w', 5, 607);
 
-Jonokuchi
 
-Jk1e   Tamanotora     Osaka     Kataonami   22.12.2005    173   106
-Jk1w   Yoshinofuji    Aomori    Isegahama   20.07.2001    170    94
-Jk2e   Daitenshin     Fukuoka   Onomatsu    19.05.2005    171   108
-Jk2w   Mihonoumi      Ibaraki   Musashigawa 21.12.1992    177   133
-Jk3e   Kinseiryu      Yamaguchi Shibatayama 15.04.2001    177    99
-Jk3w   Hoshinofuji    Chiba     Isegahama   24.07.2005    179   172
-Jk4e   Kirinohana     Toyama    Michinoku   08.01.2005    176    77
-Jk4w   Kato           Kyoto     Nishonoseki 05.10.2005    172    95
-Jk5e   Shishimaru     Tokyo     Tagonoura   25.10.2002    174   142
-Jk5w   Itakozakura    Ibaraki   Shikihide   02.10.1978    178   139
-Jk6e   Kirimaru       Aichi     Michinoku   05.04.1985    172   157
-Jk6w   Sawaisamu      Tokyo     Shikihide   07.02.1977    169   106
+
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk1e', 6, 608);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk1w', 6, 609);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk2e', 6, 610);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk2w', 6, 611);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk3e', 6, 612);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk3w', 6, 613);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk4e', 6, 614);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk4w', 6, 615);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk5e', 6, 616);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk5w', 6, 617);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk6e', 6, 618);
+INSERT INTO ranks (title, title_eng, code, division_id, power) VALUES ('序ノ口', 'Jonokuchi',  'Jk6w', 6, 619);
+
 Jk7e   Takatsukasa    Osaka     Irumagawa   06.02.2002    172    86
 Jk7w   Kotorikisen    Iwate     Sadogatake  28.01.1994    180   119
 Jk8e   Wakaonehara    Tokyo     Nishiiwa    12.06.2003    167    73

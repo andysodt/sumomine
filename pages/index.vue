@@ -1,9 +1,12 @@
 <template>
-  <section>
+  <v-card>
+    <v-card-title>
+      力士 rikishi
+    </v-card-title>
     <div class="chart">
-      <BarChart :data="barChartData" :options="barChartOptions" :height="400" />
+      <BarChart :data="barChartData" :options="barChartOptions" />
     </div>
-  </section>
+  </v-card>
 </template>
 
 <script>
@@ -38,7 +41,7 @@ export default {
       barChartOptions: {
         responsive: true,
         legend: {
-          display: true,
+          display: false,
         },
         title: {
           display: true,
@@ -61,7 +64,7 @@ export default {
             {
               ticks: {
                 beginAtZero: true,
-                max: 7,
+                max: 100,
                 min: 0,
                 stepSize: 1,
               },

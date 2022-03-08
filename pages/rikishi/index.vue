@@ -21,6 +21,13 @@
       <template #item.image="{ item }">
         <img :height="100" :src="item.image" />
       </template>
+
+      <template #item.shikona="{ item }">
+        <NuxtLink :to="'/rikishi/' + item.id">
+          {{ item.shikona }}
+        </NuxtLink>
+      </template>
+
     </v-data-table>
   </v-card>
 </template>

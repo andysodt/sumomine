@@ -4,9 +4,9 @@
       <v-list>
         <v-list-item v-for="item in items" :key="item.text" link>
           <v-list-item-content>
-            <nuxt-link :to="`${item.link}`">
+            <NuxtLink :to="`${item.link}`">
               {{ item.text }}
-            </nuxt-link>
+            </NuxtLink>
           </v-list-item-content>
         </v-list-item>
       </v-list>

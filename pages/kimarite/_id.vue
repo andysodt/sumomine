@@ -1,14 +1,22 @@
 <template>
-  <div v-if="kimarite">
+  <v-card>
     <div v-for="item in kimarite" :key="item.id">
-      <h3>{{ item.name }} {{ item.name_eng }}</h3>
-      <p>{{ item.description }} {{ item.description_eng }}</p>
+      <v-card-title> {{ item.name }} {{ item.name_eng }} </v-card-title>
+      <v-card-text>
+        {{ item.description_eng }}
+      </v-card-text>
+      <v-card-text>
+        {{ item.details_eng }}
+      </v-card-text>
+      <v-card-text>
+        <NuxtLink to="/kimarite"> List of kimarite </NuxtLink>
+      </v-card-text>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
-import kimarite_by_type from '~/apollo/queries/fetchKimariteByType'
+import kimarite_by_type from "~/apollo/queries/fetchKimariteByType";
 
 export default {
   apollo: {
@@ -16,15 +24,15 @@ export default {
       query: kimarite_by_type,
       prefetch: ({ route }) => ({ id: route.params.id }),
       variables() {
-        return { id: this.$route.params.id }
-      }
-    }
+        return { id: this.$route.params.id };
+      },
+    },
   },
   head() {
     return {
-      title: 'Kimarite by Type'
-    }
-  }
-}
+      title: "Kimarite by Type",
+    };
+  },
+};
 </script>
 

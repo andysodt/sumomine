@@ -1,0 +1,14 @@
+query rikishi_by_type($id: Int) {
+  rikishi(where: {id: {_eq: $id}}) {
+    	id
+		shikona
+    	heya
+		shusshin
+		birth_date
+		highest_rank
+		intai
+		hatsu_dohyo
+		last_shikona
+		image
+  }
+}

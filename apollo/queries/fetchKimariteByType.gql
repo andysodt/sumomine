@@ -1,9 +1,10 @@
 query kimarite_by_type($id: Int) {
-  kimarite(where: {kimarite_type_id: {_eq: $id}}) {
+  kimarite(where: {id: {_eq: $id}}) {
   	id
     name
     name_eng
     description
     description_eng
+    details_eng
   }
 }

@@ -22,6 +22,19 @@
       <template #item.image="{ item }">
         <img :height="100" :src="item.image" />
       </template>
+
+      <template #item.name="{ item }">
+        <NuxtLink :to="'/kimarite/'+item.id">
+          {{ item.name }}
+        </NuxtLink>
+      </template>
+
+      <template #item.name_eng="{ item }">
+        <NuxtLink :to="'/kimarite/'+item.id">
+          {{ item.name_eng }}
+        </NuxtLink>
+      </template>
+      
     </v-data-table>
   </v-card>
 </template>
@@ -32,7 +45,7 @@ import kimarite from "~/apollo/queries/fetchKimarite";
 export default {
   data() {
     return {
-      search: '',
+      search: "",
       headers: [
         {
           text: "決まり手",

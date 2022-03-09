@@ -1,0 +1,10 @@
+query banzuke_by_id($id: Int) {
+  banzuke(where: {id: {_eq: $id}}) {
+    	id
+	    name
+        name_eng
+        start_date
+        end_date
+        location
+  }
+}

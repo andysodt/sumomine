@@ -1,4 +1,4 @@
-query rikishi_by_type($id: Int) {
+query rikishi_by_id($id: Int) {
   rikishi(where: {id: {_eq: $id}}) {
     	id
 		shikona

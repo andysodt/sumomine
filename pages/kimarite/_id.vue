@@ -16,23 +16,18 @@
 </template>
 
 <script>
-import kimarite_by_type from "~/apollo/queries/fetchKimariteByType";
+import kimarite_by_id from "~/apollo/queries/fetchKimariteById";
 
 export default {
   apollo: {
     kimarite: {
-      query: kimarite_by_type,
+      query: kimarite_by_id,
       prefetch: ({ route }) => ({ id: route.params.id }),
       variables() {
         return { id: this.$route.params.id };
       },
     },
-  },
-  head() {
-    return {
-      title: "Kimarite by Type",
-    };
-  },
+  }
 };
 </script>
 

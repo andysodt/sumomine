@@ -1,4 +1,4 @@
-query kimarite_by_type($id: Int) {
+query kimarite_by_id($id: Int) {
   kimarite(where: {id: {_eq: $id}}) {
   	id
     name

@@ -1,36 +1,31 @@
 <template>
   <v-card>
-    <div v-for="item in rikishi" :key="item.id">
+    <div v-for="item in banzuke" :key="item.id">
       <v-card-title>
-        {{ item.shikona }}
+        {{ item.name }}
       </v-card-title>
       <v-card-text>
-        {{ item.heya }}
+        {{ item.location }}
       </v-card-text>
       <v-card-text>
-        <NuxtLink to="/rikishi"> List of rikishi </NuxtLink>
+        <NuxtLink to="/banzuke"> List of banzuke </NuxtLink>
       </v-card-text>
-      </div>
+    </div>
   </v-card>
 </template>
 
 <script>
-import rikishi from "~/apollo/queries/fetchRikishiById";
+import banzuke from "~/apollo/queries/fetchBanzukeById";
 
 export default {
   apollo: {
-    rikishi: {
-      query: rikishi,
+    banzuke: {
+      query: banzuke,
       prefetch: ({ route }) => ({ id: route.params.id }),
       variables() {
         return { id: this.$route.params.id };
       },
     },
-  },
-  head() {
-    return {
-      title: "Rikishi",
-    };
   },
 };
 </script>

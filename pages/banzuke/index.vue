@@ -17,7 +17,14 @@
       :items-per-page="500"
       :search="search"
       class="elevation-1"
-    ></v-data-table>
+    >
+      <template #item.name_eng="{ item }">
+        <NuxtLink :to="'/banzuke/' + item.id">
+          {{ item.name_eng }}
+        </NuxtLink>
+      </template>
+      
+    </v-data-table>
   </v-card>
 </template>
 

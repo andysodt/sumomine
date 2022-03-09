@@ -24,8 +24,11 @@
     "core-js": "latest",
     "cross-env": "latest",
     "graphql-tag": "latest",
+    "net": "^1.0.2",
     "nuxt": "latest",
+    "puppeteer": "^13.5.1",
     "reqlim": "latest",
+    "tls": "^0.0.1",
     "vue-chartjs": "latest"
   },
   "devDependencies": {

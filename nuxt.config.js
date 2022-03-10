@@ -47,7 +47,7 @@ module.exports = {
   http: {
     // See https://http.nuxtjs.org/api/#options
   },
-  
+
   // Give apollo module options
   apollo: {
     cookieAttributes: {
@@ -67,11 +67,22 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-    ** You can extend webpack config here
-    */
-    extend(config, ctx) {
-
-    }
+    extend(config, { isServer, isClient }) {
+      config.externals = config.externals || {}
+      if (!isServer) {
+        config.node = {
+          fs: 'empty',
+        }
+        if (Array.isArray(config.externals)) {
+          config.externals.push({
+            puppeteer: require('puppeteer'),
+          })
+        } else {
+          config.externals.puppeteer = require('puppeteer')
+        }
+      }
+      config.output.globalObject = 'this'
+      return config
+    },
   }
 }

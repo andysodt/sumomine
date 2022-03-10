@@ -1,7 +1,7 @@
 {
-  "name": "Sumomine",
+  "name": "sumomine",
   "version": "1.0.0",
-  "description": "Sumomine",
+  "description": "sumomine",
   "author": "Andrew Sodt",
   "private": true,
   "license": "(MIT OR Apache-2.0)",
@@ -12,7 +12,14 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "postinstall": "node puppeteer"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "tls": false
   },
   "dependencies": {
     "@nuxt/http": "latest",

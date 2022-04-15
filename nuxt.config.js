@@ -68,6 +68,11 @@ module.exports = {
   */
   build: {
     extend(config, { isServer, isClient }) {
+
+      if (isClient) {
+        config.devtool = 'eval-source-map'
+      }
+
       config.externals = config.externals || {}
       if (!isServer) {
         config.node = {

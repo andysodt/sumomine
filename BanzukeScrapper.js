@@ -6,65 +6,79 @@ let browser
 let cardArr = []
 class Banzuke {
 
-  // Initializes and create puppeteer instance
-  static async init() {
-    browser = await puppeteer.launch({
-      // headless: false,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--single-process', // <- this one doesn't works in Windows
-        '--disable-gpu',
-      ],
-    })
+	// Initializes and create puppeteer instance
+	static async init() {
+		browser = await puppeteer.launch({
+			// headless: false,
+			args: [
+				'--no-sandbox',
+				'--disable-setuid-sandbox',
+				'--disable-dev-shm-usage',
+				'--disable-accelerated-2d-canvas',
+				'--no-first-run',
+				'--no-zygote',
+				'--single-process', // <- this one doesn't works in Windows
+				'--disable-gpu',
+			],
+		})
 
-    page = await browser.newPage()
-    await Promise.race([
-      await page.goto(banzukeUrl, { waitUntil: 'load' }).catch(() => {}),
-      await page.waitForSelector('.banzuke').catch(() => {}),
-    ])
-  }
+		page = await browser.newPage()
 
-  // Visits the page, retrieves the banzuke
-  static async resolver() {
-    await this.init()
-    const banzukeURLs = await page.evaluate(() => {
-      const cards = document.querySelectorAll('.banzuke')
-      cardArr = Array.from(cards)
-      const cardLinks = []
-      cardArr.map((card) => {
-        const cardTitle = card.querySelector('caption')
-        const { text } = cardTitle
-        cardLinks.push({
-          titleText: text,
-        })
-      })
-      return cardLinks
-    })
-    return banzukeURLs
-  }
+		await Promise.race([
+			await page.goto(banzukeUrl, { waitUntil: 'networkidle2' }).catch(() => {}),
+			await page.waitForSelector('.banzuke').catch(() => {}),
+		])
+	}
 
-  // Converts the banzuke to array
-  static async getBanzuke() {
-    const banzuke = await this.resolver()
-    await browser.close()
-    const data = {}
-    data.banzuke = this.resolveBanzuke(banzuke)
-    data.total_banzuke = banzuke.length
-    return data
-  }
+	// Visits the page, retrieves the banzuke
+	static async resolver() {
 
-  static resolveBanzuke(banzuke) {
-    const resolvedBanzuke = banzuke.map((ban) => {
-      const resolvedBanzuke = {}
-      resolvedBanzuke.title = ban.titleText
-      return resolvedBanzuke
-    })
-    return resolvedBanzuke
-  }
+		await this.init()
+
+		const banzuke = await page.evaluate(() => {
+
+			const cards = document.querySelectorAll('.banzuke')
+
+			cardArr = Array.from(cards)
+			const cardLinks = []
+			cardArr.map((card) => {
+				const cardTitle = card.querySelectorAll('a')
+
+				const { text } = cardTitle.innerHTML
+				cardLinks.push({
+					titleText: text,
+				})
+			})
+
+			return cardLinks
+		})
+
+		
+		return banzuke
+	}
+
+	// Converts the banzuke to array
+	static async getBanzuke() {
+
+		const banzuke = await this.resolver()
+		await browser.close()
+
+		const data = {}
+		data.banzuke = this.resolveBanzuke(banzuke)
+		data.total_banzuke = banzuke.length
+
+		console.log(data)
+
+		return data
+	}
+
+	static resolveBanzuke(banzuke) {
+		const resolvedBanzuke = banzuke.map((ban) => {
+			const resolvedBanzuke = {}
+			resolvedBanzuke.title = ban.titleText
+			return resolvedBanzuke
+		})
+		return resolvedBanzuke
+	}
 }
 export default Banzuke

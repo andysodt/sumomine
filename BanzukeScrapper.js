@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 //const banzukeUrl = 'https://www.dice.com/jobs?q=backend&countryCode=US&radius=30&radiusUnit=mi&page=1&pageSize=20&filters.postedDate=ONE&filters.isRemote=true&language=en'
-const banzukeUrl = 'http://sumodb.sumogames.de/Banzuke.aspx'
+const banzukeUrl = 'http://sumodb.sumogames.de/Banzuke_text.aspx'
 let page
 let browser
 let cardArr = []
@@ -25,7 +25,7 @@ class Banzuke {
     page = await browser.newPage()
     await Promise.race([
       await page.goto(banzukeUrl, { waitUntil: 'load' }).catch(() => {}),
-      await page.waitForSelector('.banzuke').catch(() => {}),
+      await page.waitForSelector('pre').catch(() => {}),
     ])
   }
 
@@ -33,17 +33,8 @@ class Banzuke {
   static async resolver() {
     await this.init()
     const banzukeURLs = await page.evaluate(() => {
-      const cards = document.querySelectorAll('.banzuke')
-      cardArr = Array.from(cards)
-      const cardLinks = []
-      cardArr.map((card) => {
-        const cardTitle = card.querySelector('caption')
-        const { text } = cardTitle
-        cardLinks.push({
-          titleText: text,
-        })
-      })
-      return cardLinks
+      const cards = document.querySelectorAll('pre')
+      return cards
     })
     return banzukeURLs
   }
@@ -53,8 +44,11 @@ class Banzuke {
     const banzuke = await this.resolver()
     await browser.close()
     const data = {}
-    data.banzuke = this.resolveBanzuke(banzuke)
+    data.banzuke = banzuke
     data.total_banzuke = banzuke.length
+
+    console.log(data)
+
     return data
   }
 

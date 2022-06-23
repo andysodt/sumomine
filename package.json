@@ -28,7 +28,7 @@
     "@nuxtjs/axios": "latest",
     "apollo-cache-inmemory": "latest",
     "chart.js": "^2.9.3",
-    "core-js": "latest",
+    "core-js": "^3.23.2",
     "cross-env": "latest",
     "graphql-tag": "latest",
     "net": "^1.0.2",
@@ -36,10 +36,10 @@
     "puppeteer": "^13.5.1",
     "reqlim": "latest",
     "tls": "^0.0.1",
-    "vue-chartjs": "latest"
+    "vue-chartjs": "^4.1.1"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "latest",
-    "nodemon": "latest"
+    "nodemon": "^2.0.18"
   }
 }

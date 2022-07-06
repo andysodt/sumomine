@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 //const banzukeUrl = 'https://www.dice.com/jobs?q=backend&countryCode=US&radius=30&radiusUnit=mi&page=1&pageSize=20&filters.postedDate=ONE&filters.isRemote=true&language=en'
-const banzukeUrl = 'http://sumodb.sumogames.de/Banzuke.aspx'
+const banzukeUrl = 'http://sumodb.sumogames.de/Banzuke_text.aspx'
 let page
 let browser
 let cardArr = []

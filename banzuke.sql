@@ -1,26 +1,27 @@
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('横綱', 'Yokozuna', 'Y1e', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('横綱', 'Yokozuna', 'Y1w', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('横綱', 'Yokozuna', 'Y2e', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('横綱', 'Yokozuna', 'Y2w', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('大関', 'Ōzeki', 'O1e', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('大関', 'Ōzeki', 'O1w', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('大関', 'Ōzeki', 'O2e', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('大関', 'Ōzeki', 'O2w', 1);
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('S1e    Wakatakakage   Fukushima Arashio     06.12.1994    180   129
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('S1w    Abi            Saitama   Shikoroyama 04.05.1994    188   149
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('K1e    Takanosho      Chiba     Tokiwayama  14.11.1994    184   163
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('K1w    Hoshoryu       Mongolia  Tatsunami   22.05.1999    186   131
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M1e    Daieisho       Saitama   Oitekaze    10.11.1993    182   161
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M1w    Ura            Osaka     Kise        22.06.1992    175   136
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M2e    Ichinojo       Mongolia  Minato      07.04.1993    192   198
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M2w    Tamawashi      Mongolia  Kataonami   16.11.1984    189   168
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M3e    Onosho         Aomori    Onomatsu    04.07.1996    177   157
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M3w    Meisei         Kagoshima Tatsunami   24.07.1995    180   151
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M4e    Kiribayama     Mongolia  Michinoku   24.04.1996    187   138
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M4w    Endo           Ishikawa  Oitekaze    19.10.1990    184   148
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M5e    Takarafuji     Aomori    Isegahama   18.02.1987    185   166
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M5w    Ishiura        Tottori   Miyagino    10.01.1990    174   110
-INSERT INTO ranks (title, title_eng, code, division_id) VALUES ('M6e    Hokutofuji     Saitama   Hakkaku     15.07.1992    185   162
+Haru 2022
+Osaka, Osaka Prefectural Gymnasium
+
+Makuuchi
+
+Y1e    Terunofuji     Mongolia  Isegahama   29.11.1991    191   173
+O1e    Shodai         Kumamoto  Tokitsukaze 05.11.1991    184   170
+O1w    Takakeisho     Hyogo     Tokiwayama  05.08.1996    175   183
+O2w    Mitakeumi      Nagano    Dewanoumi   25.12.1992    179   172
+S1e    Wakatakakage   Fukushima Arashio     06.12.1994    180   129
+S1w    Abi            Saitama   Shikoroyama 04.05.1994    188   149
+K1e    Takanosho      Chiba     Tokiwayama  14.11.1994    184   163
+K1w    Hoshoryu       Mongolia  Tatsunami   22.05.1999    186   131
+M1e    Daieisho       Saitama   Oitekaze    10.11.1993    182   161
+M1w    Ura            Osaka     Kise        22.06.1992    175   136
+M2e    Ichinojo       Mongolia  Minato      07.04.1993    192   198
+M2w    Tamawashi      Mongolia  Kataonami   16.11.1984    189   168
+M3e    Onosho         Aomori    Onomatsu    04.07.1996    177   157
+M3w    Meisei         Kagoshima Tatsunami   24.07.1995    180   151
+M4e    Kiribayama     Mongolia  Michinoku   24.04.1996    187   138
+M4w    Endo           Ishikawa  Oitekaze    19.10.1990    184   148
+M5e    Takarafuji     Aomori    Isegahama   18.02.1987    185   166
+M5w    Ishiura        Tottori   Miyagino    10.01.1990    174   110
+M6e    Hokutofuji     Saitama   Hakkaku     15.07.1992    185   162
 M6w    Kotonowaka     Chiba     Sadogatake  19.11.1997    188   166
 M7e    Takayasu       Ibaraki   Tagonoura   28.02.1990    187   175
 M7w    Okinoumi       Shimane   Hakkaku     29.07.1985    191   160
@@ -658,6 +659,3 @@ Sd91w  Tokitora, changed from Shimoyama
 Sd98w  Akatora, changed from Omote
 Jd35w  Yamana, changed from Banshunada
 
-
-home - banzuke - torikumi - yusho - sansho - rikishi - kabu - query - 日本語
-We thank our sponsors adplorer.de and adplorer.fr for providing our hosting.

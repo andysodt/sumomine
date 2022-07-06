@@ -39,6 +39,6 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "latest",
-    "nodemon": "latest"
+    "nodemon": "^2.0.18"
   }
 }

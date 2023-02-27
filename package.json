@@ -20,11 +20,11 @@
   "dependencies": {
     "@nuxt/http": "^0.5.0",
     "@nuxtjs/apollo": "latest",
-    "@nuxtjs/auth-next": "latest",
+    "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "latest",
     "apollo-cache-inmemory": "latest",
     "chart.js": "^2.9.4",
-    "core-js": "latest",
+    "core-js": "^3.29.0",
     "graphql-tag": "latest",
     "net": "latest",
     "nuxt": "^2.12.2",

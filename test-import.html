@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Rikishi Import</title>
+</head>
+<body>
+    <h1>Test Rikishi Import</h1>
+    <button id="testBtn">Test Import</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+
+            try {
+                const response = await fetch('/api/sumo/rikishis?limit=10');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <h3>Success!</h3>
+                    <p>Total: ${data.total}</p>
+                    <p>Received: ${data.records.length} records</p>
+                    <pre>${JSON.stringify(data.records[0], null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3>Error:</h3><p style="color: red;">${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

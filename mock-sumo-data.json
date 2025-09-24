@@ -1,0 +1,37 @@
+{
+  "records": [
+    {
+      "rikishiID": 1,
+      "rikishiName": "Terunofuji",
+      "birthplace": "Mongolia",
+      "debut": "2011.05",
+      "height": 192,
+      "weight": 192,
+      "currentRank": "Yokozuna",
+      "heya": "Isegahama",
+      "shikona": "照ノ富士春雄"
+    },
+    {
+      "rikishiID": 2,
+      "rikishiName": "Takakeisho",
+      "birthplace": "Japan",
+      "debut": "2014.09",
+      "height": 175,
+      "weight": 170,
+      "currentRank": "Ozeki",
+      "heya": "Tokitsukaze",
+      "shikona": "貴景勝貴信"
+    },
+    {
+      "rikishiID": 3,
+      "rikishiName": "Wakatakakage",
+      "birthplace": "Japan",
+      "debut": "2017.03",
+      "height": 182,
+      "weight": 133,
+      "currentRank": "Sekiwake",
+      "heya": "Arashio",
+      "shikona": "若隆景渥"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
-import { Rikishi, Basho, Bout, KimariiteEntity, MeasurementEntity, RankEntity, ShikonaEntity, BanzukeEntity, TorikumiEntity } from '../types';
+import { createContext, useContext, useReducer, useEffect } from 'react';
+import type { ReactNode, Dispatch } from 'react';
+import type { Rikishi, Basho, Bout, KimariiteEntity, MeasurementEntity, RankEntity, ShikonaEntity, BanzukeEntity, TorikumiEntity } from '../types';
 
 interface SumoState {
   rikishi: Rikishi[];
@@ -20,9 +21,11 @@ type SumoAction =
   | { type: 'ADD_BASHO'; payload: Basho }
   | { type: 'UPDATE_BASHO'; payload: Basho }
   | { type: 'DELETE_BASHO'; payload: string }
+  | { type: 'LOAD_BASHOS'; payload: Basho[] }
   | { type: 'ADD_BOUT'; payload: Bout }
   | { type: 'UPDATE_BOUT'; payload: Bout }
   | { type: 'DELETE_BOUT'; payload: string }
+  | { type: 'LOAD_BOUTS'; payload: Bout[] }
   | { type: 'ADD_KIMARITE'; payload: KimariiteEntity }
   | { type: 'UPDATE_KIMARITE'; payload: KimariiteEntity }
   | { type: 'DELETE_KIMARITE'; payload: string }
@@ -91,6 +94,8 @@ function sumoReducer(state: SumoState, action: SumoAction): SumoState {
         ...state,
         basho: state.basho.filter(b => b.id !== action.payload),
       };
+    case 'LOAD_BASHOS':
+      return { ...state, basho: action.payload };
     case 'ADD_BOUT':
       return { ...state, bouts: [...state.bouts, action.payload] };
     case 'UPDATE_BOUT':
@@ -105,6 +110,8 @@ function sumoReducer(state: SumoState, action: SumoAction): SumoState {
         ...state,
         bouts: state.bouts.filter(b => b.id !== action.payload),
       };
+    case 'LOAD_BOUTS':
+      return { ...state, bouts: action.payload };
     case 'ADD_KIMARITE':
       return { ...state, kimarite: [...state.kimarite, action.payload] };
     case 'UPDATE_KIMARITE':
@@ -210,16 +217,18 @@ function sumoReducer(state: SumoState, action: SumoAction): SumoState {
 
 interface SumoContextType {
   state: SumoState;
-  dispatch: React.Dispatch<SumoAction>;
+  dispatch: Dispatch<SumoAction>;
   addRikishi: (rikishi: Rikishi) => void;
   updateRikishi: (rikishi: Rikishi) => void;
   deleteRikishi: (id: string) => void;
   addBasho: (basho: Basho) => void;
   updateBasho: (basho: Basho) => void;
   deleteBasho: (id: string) => void;
+  loadBashos: (bashos: Basho[]) => void;
   addBout: (bout: Bout) => void;
   updateBout: (bout: Bout) => void;
   deleteBout: (id: string) => void;
+  loadBouts: (bouts: Bout[]) => void;
   addKimarite: (kimarite: KimariiteEntity) => void;
   updateKimarite: (kimarite: KimariiteEntity) => void;
   deleteKimarite: (id: string) => void;
@@ -292,6 +301,9 @@ export function SumoProvider({ children }: { children: ReactNode }) {
   const deleteBasho = (id: string) => {
     dispatch({ type: 'DELETE_BASHO', payload: id });
   };
+  const loadBashos = (bashos: Basho[]) => {
+    dispatch({ type: 'LOAD_BASHOS', payload: bashos });
+  };
 
   const addBout = (bout: Bout) => {
     dispatch({ type: 'ADD_BOUT', payload: bout });
@@ -303,6 +315,9 @@ export function SumoProvider({ children }: { children: ReactNode }) {
 
   const deleteBout = (id: string) => {
     dispatch({ type: 'DELETE_BOUT', payload: id });
+  };
+  const loadBouts = (bouts: Bout[]) => {
+    dispatch({ type: 'LOAD_BOUTS', payload: bouts });
   };
 
   const addKimarite = (kimarite: KimariiteEntity) => {
@@ -412,9 +427,11 @@ export function SumoProvider({ children }: { children: ReactNode }) {
         addBasho,
         updateBasho,
         deleteBasho,
+        loadBashos,
         addBout,
         updateBout,
         deleteBout,
+        loadBouts,
         addKimarite,
         updateKimarite,
         deleteKimarite,

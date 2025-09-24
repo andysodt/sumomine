@@ -1,12 +1,11 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Trophy, Swords, BarChart3, Plus, Database } from 'lucide-react';
-import { useSumo } from '../context/SumoContext';
+import { useSumoDB } from '../context/SumoContextDB';
 import { useLanguage } from '../context/LanguageContext';
 import { ComprehensiveImport } from '../components/ComprehensiveImport';
 
 export function Dashboard() {
-  const { state } = useSumo();
+  const { state } = useSumoDB();
   const { t } = useLanguage();
 
   const stats = [
@@ -28,7 +27,7 @@ export function Dashboard() {
       name: t('totalBouts'),
       value: state.bouts.length,
       icon: Swords,
-      color: 'bg-red-500',
+      color: 'bg-jpblue-500',
       href: '/bouts',
     },
     {

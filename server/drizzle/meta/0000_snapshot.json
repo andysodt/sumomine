@@ -1,0 +1,1092 @@
+{
+  "id": "05440149-dd52-4802-8f2f-820870fdf806",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.banzuke": {
+      "name": "banzuke",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "basho_id": {
+          "name": "basho_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "division": {
+          "name": "division",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rank": {
+          "name": "rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "side": {
+          "name": "side",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rikishi_id": {
+          "name": "rikishi_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rikishi_name": {
+          "name": "rikishi_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stable": {
+          "name": "stable",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "month": {
+          "name": "month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "season_name": {
+          "name": "season_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "banzuke_rikishi_id_rikishi_id_fk": {
+          "name": "banzuke_rikishi_id_rikishi_id_fk",
+          "tableFrom": "banzuke",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "rikishi_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.basho": {
+      "name": "basho",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "division": {
+          "name": "division",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "participants": {
+          "name": "participants",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'"
+        },
+        "bouts": {
+          "name": "bouts",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bouts": {
+      "name": "bouts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "basho_id": {
+          "name": "basho_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rikishi1_id": {
+          "name": "rikishi1_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rikishi2_id": {
+          "name": "rikishi2_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "winner_id": {
+          "name": "winner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kimarite": {
+          "name": "kimarite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "day": {
+          "name": "day",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "division": {
+          "name": "division",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "match_no": {
+          "name": "match_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "east_id": {
+          "name": "east_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "east_shikona": {
+          "name": "east_shikona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "east_rank": {
+          "name": "east_rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "west_id": {
+          "name": "west_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "west_shikona": {
+          "name": "west_shikona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "west_rank": {
+          "name": "west_rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "winner_en": {
+          "name": "winner_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "winner_jp": {
+          "name": "winner_jp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bouts_basho_id_basho_id_fk": {
+          "name": "bouts_basho_id_basho_id_fk",
+          "tableFrom": "bouts",
+          "tableTo": "basho",
+          "columnsFrom": [
+            "basho_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bouts_rikishi1_id_rikishi_id_fk": {
+          "name": "bouts_rikishi1_id_rikishi_id_fk",
+          "tableFrom": "bouts",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "rikishi1_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bouts_rikishi2_id_rikishi_id_fk": {
+          "name": "bouts_rikishi2_id_rikishi_id_fk",
+          "tableFrom": "bouts",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "rikishi2_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bouts_winner_id_rikishi_id_fk": {
+          "name": "bouts_winner_id_rikishi_id_fk",
+          "tableFrom": "bouts",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "winner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.kimarite": {
+      "name": "kimarite",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Unknown'"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "count": {
+          "name": "count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "last_used": {
+          "name": "last_used",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "percentage": {
+          "name": "percentage",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rarity": {
+          "name": "rarity",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "effectiveness": {
+          "name": "effectiveness",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "popularity_trend": {
+          "name": "popularity_trend",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_used_days_ago": {
+          "name": "last_used_days_ago",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.measurements": {
+      "name": "measurements",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "basho_id": {
+          "name": "basho_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rikishi_id": {
+          "name": "rikishi_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rikishi_name": {
+          "name": "rikishi_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weight": {
+          "name": "weight",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bmi": {
+          "name": "bmi",
+          "type": "numeric(4, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bmi_category": {
+          "name": "bmi_category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "height_percentile": {
+          "name": "height_percentile",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weight_percentile": {
+          "name": "weight_percentile",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "power_index": {
+          "name": "power_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weight_height_ratio": {
+          "name": "weight_height_ratio",
+          "type": "numeric(4, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "month": {
+          "name": "month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "season_name": {
+          "name": "season_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comparison_to_average": {
+          "name": "comparison_to_average",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "measurements_rikishi_id_rikishi_id_fk": {
+          "name": "measurements_rikishi_id_rikishi_id_fk",
+          "tableFrom": "measurements",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "rikishi_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ranks": {
+      "name": "ranks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "basho_id": {
+          "name": "basho_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rikishi_id": {
+          "name": "rikishi_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rikishi_name": {
+          "name": "rikishi_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rank": {
+          "name": "rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "division": {
+          "name": "division",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rank_number": {
+          "name": "rank_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "side": {
+          "name": "side",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "month": {
+          "name": "month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "season_name": {
+          "name": "season_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_promotion": {
+          "name": "is_promotion",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_demotion": {
+          "name": "is_demotion",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previous_rank": {
+          "name": "previous_rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rank_change": {
+          "name": "rank_change",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ranks_rikishi_id_rikishi_id_fk": {
+          "name": "ranks_rikishi_id_rikishi_id_fk",
+          "tableFrom": "ranks",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "rikishi_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rikishi": {
+      "name": "rikishi",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shikona_en": {
+          "name": "shikona_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shikona_jp": {
+          "name": "shikona_jp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rank": {
+          "name": "rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stable": {
+          "name": "stable",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weight": {
+          "name": "weight",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "birth_date": {
+          "name": "birth_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "debut": {
+          "name": "debut",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wins": {
+          "name": "wins",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "losses": {
+          "name": "losses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "draws": {
+          "name": "draws",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "sumodb_id": {
+          "name": "sumodb_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nsk_id": {
+          "name": "nsk_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_rank": {
+          "name": "current_rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "heya": {
+          "name": "heya",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shusshin": {
+          "name": "shusshin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.shikonas": {
+      "name": "shikonas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "basho_id": {
+          "name": "basho_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rikishi_id": {
+          "name": "rikishi_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rikishi_name": {
+          "name": "rikishi_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shikona": {
+          "name": "shikona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shikona_en": {
+          "name": "shikona_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shikona_jp": {
+          "name": "shikona_jp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "month": {
+          "name": "month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "season_name": {
+          "name": "season_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_new_shikona": {
+          "name": "is_new_shikona",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previous_shikona": {
+          "name": "previous_shikona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shikona_history": {
+          "name": "shikona_history",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "shikonas_rikishi_id_rikishi_id_fk": {
+          "name": "shikonas_rikishi_id_rikishi_id_fk",
+          "tableFrom": "shikonas",
+          "tableTo": "rikishi",
+          "columnsFrom": [
+            "rikishi_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.torikumi": {
+      "name": "torikumi",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "basho_id": {
+          "name": "basho_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "division": {
+          "name": "division",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "day": {
+          "name": "day",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "match_no": {
+          "name": "match_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "east_id": {
+          "name": "east_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "east_shikona": {
+          "name": "east_shikona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "east_rank": {
+          "name": "east_rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "west_id": {
+          "name": "west_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "west_shikona": {
+          "name": "west_shikona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "west_rank": {
+          "name": "west_rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "winner_id": {
+          "name": "winner_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kimarite": {
+          "name": "kimarite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "winner_en": {
+          "name": "winner_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "winner_jp": {
+          "name": "winner_jp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "month": {
+          "name": "month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "season_name": {
+          "name": "season_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Download, Search, BarChart3, Trophy, AlertCircle } from 'lucide-react';
-import { useSumo } from '../context/SumoContext';
+import { useState } from 'react';
+import { Download, Search, BarChart3, Trophy, AlertCircle, Star, TrendingUp, Clock, Hash } from 'lucide-react';
+import { useSumoDB } from '../context/SumoContextDB';
 import { useLanguage } from '../context/LanguageContext';
-import { KimariiteEntity } from '../types';
+import type { KimariiteEntity } from '../types';
 import { SumoApiService } from '../services/sumoApi';
 
 export function KimaritePage() {
-  const { state, loadKimarite } = useSumo();
-  const { t } = useLanguage();
+  const { state, loadKimarite } = useSumoDB();
+  const { } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
-  const [sortBy, setSortBy] = useState<'count' | 'name' | 'percentage'>('count');
+  const [sortBy, setSortBy] = useState<'count' | 'name' | 'percentage' | 'rank' | 'rarity'>('count');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,6 +30,12 @@ export function KimaritePage() {
         return a.nameEn.localeCompare(b.nameEn);
       case 'percentage':
         return (b.percentage || 0) - (a.percentage || 0);
+      case 'rank':
+        return (a.rank || 0) - (b.rank || 0);
+      case 'rarity': {
+        const rarityOrder = { 'Extremely Rare': 5, 'Very Rare': 4, 'Rare': 3, 'Uncommon': 2, 'Common': 1 };
+        return (rarityOrder[b.rarity || 'Common'] || 0) - (rarityOrder[a.rarity || 'Common'] || 0);
+      }
       default:
         return 0;
     }
@@ -44,14 +50,14 @@ export function KimaritePage() {
 
     try {
       // Try different sorting options
-      const sortOptions = ['count', 'kimarite', 'lastusage'];
+      const sortOptions: ('count' | 'kimarite' | 'lastusage')[] = ['count', 'kimarite', 'lastusage'];
       let kimariiteData: KimariiteEntity[] = [];
 
       for (const sortOption of sortOptions) {
         try {
           const data = await SumoApiService.fetchKimarite(sortOption);
           if (data && data.length > 0) {
-            kimariiteData = data;
+            kimariiteData = SumoApiService.convertKimariiteToEntities(data);
             break;
           }
         } catch (err) {
@@ -80,11 +86,11 @@ export function KimaritePage() {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpred-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
+            <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
               <Trophy className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-jpblue-600 via-jpred-600 to-jpred-700 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-jpblue-600 via-jpblue-600 to-jpblue-700 bg-clip-text text-transparent">
                 Kimarite (Winning Techniques)
               </h1>
               <p className="mt-2 text-gray-600">
@@ -132,14 +138,14 @@ export function KimaritePage() {
               placeholder="Search kimarite..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-red-500 focus:border-red-500"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-jpblue-500 focus:border-jpblue-500"
             />
           </div>
           <div>
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-jpblue-500 focus:border-jpblue-500 rounded-md"
             >
               <option value="">All Categories</option>
               {uniqueCategories.map(category => (
@@ -150,12 +156,14 @@ export function KimaritePage() {
           <div>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'count' | 'name' | 'percentage')}
-              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-md"
+              onChange={(e) => setSortBy(e.target.value as 'count' | 'name' | 'percentage' | 'rank' | 'rarity')}
+              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-jpblue-500 focus:border-jpblue-500 rounded-md"
             >
               <option value="count">Sort by Usage Count</option>
+              <option value="rank">Sort by Rank</option>
               <option value="name">Sort by Name</option>
               <option value="percentage">Sort by Percentage</option>
+              <option value="rarity">Sort by Rarity</option>
             </select>
           </div>
         </div>
@@ -177,7 +185,7 @@ export function KimaritePage() {
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-br from-jpred-500 to-jpred-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-600 rounded-lg flex items-center justify-center">
                 <Trophy className="h-5 w-5 text-white" />
               </div>
               <div className="ml-4">
@@ -206,26 +214,46 @@ export function KimaritePage() {
           {sortedKimarite.map((kimarite, index) => (
             <div
               key={kimarite.id}
-              className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpred transition-all duration-300 transform hover:scale-105"
+              className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpblue transition-all duration-300 transform hover:scale-105"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="px-6 py-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <div className="w-10 h-10 bg-gradient-to-br from-jpred-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
+                      <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
                         <span className="text-white font-bold text-sm">技</span>
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-jpred-700 transition-colors">
+                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-jpblue-700 transition-colors">
                           {kimarite.nameEn}
                         </h3>
-                        <p className="text-sm font-medium text-jpred-600">{kimarite.name}</p>
+                        <p className="text-sm font-medium text-jpblue-600">{kimarite.name}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 bg-gray-50 px-2 py-1 rounded-md inline-block">
-                      {kimarite.category}
-                    </p>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-sm text-gray-500 bg-gray-50 px-2 py-1 rounded-md inline-block">
+                        {kimarite.category}
+                      </p>
+                      {kimarite.rank && (
+                        <div className="flex items-center text-xs text-jpblue-600 bg-jpblue-50 px-2 py-1 rounded-md">
+                          <Hash className="h-3 w-3 mr-1" />
+                          #{kimarite.rank}
+                        </div>
+                      )}
+                      {kimarite.rarity && (
+                        <div className={`flex items-center text-xs px-2 py-1 rounded-md ${
+                          kimarite.rarity === 'Extremely Rare' ? 'text-purple-600 bg-purple-50' :
+                          kimarite.rarity === 'Very Rare' ? 'text-red-600 bg-red-50' :
+                          kimarite.rarity === 'Rare' ? 'text-orange-600 bg-orange-50' :
+                          kimarite.rarity === 'Uncommon' ? 'text-yellow-600 bg-yellow-50' :
+                          'text-green-600 bg-green-50'
+                        }`}>
+                          <Star className="h-3 w-3 mr-1" />
+                          {kimarite.rarity}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -243,10 +271,48 @@ export function KimaritePage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Percentage:</span>
-                      <span className="font-medium text-jpred-600">
+                      <span className="font-medium text-jpblue-600">
                         {getUsagePercentage(kimarite.count)}%
                       </span>
                     </div>
+                    {kimarite.effectiveness && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Effectiveness:</span>
+                        <span className={`font-medium ${
+                          kimarite.effectiveness === 'High' ? 'text-green-600' :
+                          kimarite.effectiveness === 'Medium' ? 'text-yellow-600' :
+                          'text-red-600'
+                        }`}>
+                          {kimarite.effectiveness}
+                        </span>
+                      </div>
+                    )}
+                    {kimarite.popularityTrend && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500 flex items-center">
+                          <TrendingUp className="h-3 w-3 mr-1" />
+                          Trend:
+                        </span>
+                        <span className={`font-medium ${
+                          kimarite.popularityTrend === 'Rising' ? 'text-green-600' :
+                          kimarite.popularityTrend === 'Stable' ? 'text-blue-600' :
+                          'text-red-600'
+                        }`}>
+                          {kimarite.popularityTrend}
+                        </span>
+                      </div>
+                    )}
+                    {kimarite.lastUsedDaysAgo && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500 flex items-center">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Days Ago:
+                        </span>
+                        <span className="font-medium text-gray-600">
+                          {kimarite.lastUsedDaysAgo}
+                        </span>
+                      </div>
+                    )}
                     {kimarite.lastUsed && (
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Last Used:</span>
@@ -260,7 +326,7 @@ export function KimaritePage() {
                   <div className="mt-4">
                     <div className="bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
                       <div
-                        className="bg-gradient-to-r from-jpred-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
+                        className="bg-gradient-to-r from-jpblue-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
                         style={{
                           width: `${Math.max(1, parseFloat(getUsagePercentage(kimarite.count)))}%`
                         }}
@@ -290,7 +356,7 @@ export function KimaritePage() {
               <button
                 onClick={handleImportKimarite}
                 disabled={isLoading}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 disabled:opacity-50"
               >
                 <Download className="-ml-1 mr-2 h-5 w-5" />
                 {isLoading ? 'Importing...' : 'Import Kimarite'}

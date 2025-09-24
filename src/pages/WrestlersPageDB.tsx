@@ -6,8 +6,8 @@ import { SumoApiService } from '../services/sumoApi';
 import type { Rikishi } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 
-export function WrestlersPage() {
-  const { state, addRikishi, updateRikishi, deleteRikishi } = useSumoDB();
+export function WrestlersPageDB() {
+  const { state, addRikishi, bulkAddRikishi, updateRikishi, deleteRikishi } = useSumoDB();
   const { t } = useLanguage();
   const [showForm, setShowForm] = useState(false);
   const [editingRikishi, setEditingRikishi] = useState<Rikishi | undefined>();
@@ -31,14 +31,19 @@ export function WrestlersPage() {
     return matchesSearch && matchesRank;
   });
 
-  const handleSubmit = (rikishi: Rikishi) => {
-    if (editingRikishi) {
-      updateRikishi(rikishi);
-    } else {
-      addRikishi(rikishi);
+  const handleSubmit = async (rikishi: Rikishi) => {
+    try {
+      if (editingRikishi) {
+        await updateRikishi(rikishi);
+      } else {
+        await addRikishi(rikishi);
+      }
+      setShowForm(false);
+      setEditingRikishi(undefined);
+    } catch (error) {
+      console.error('Error saving rikishi:', error);
+      // Error is already handled in the context
     }
-    setShowForm(false);
-    setEditingRikishi(undefined);
   };
 
   const handleEdit = (rikishi: Rikishi) => {
@@ -46,9 +51,14 @@ export function WrestlersPage() {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm(t('confirmDelete'))) {
-      deleteRikishi(id);
+      try {
+        await deleteRikishi(id);
+      } catch (error) {
+        console.error('Error deleting rikishi:', error);
+        // Error is already handled in the context
+      }
     }
   };
 
@@ -86,30 +96,11 @@ export function WrestlersPage() {
         !existingRikishi.some(existing => existing.id === r.id)
       );
 
-      // Add new rikishi to the system
-      let addedCount = 0;
-      const batchSize = 100; // Process in batches
-
-      for (let i = 0; i < newRikishi.length; i += batchSize) {
-        const batch = newRikishi.slice(i, i + batchSize);
-
-        batch.forEach(r => {
-          try {
-            addRikishi(r);
-            addedCount++;
-          } catch (error) {
-            console.error(`Failed to add rikishi ${r.name}:`, error);
-          }
-        });
-
-        // Small delay between batches to keep UI responsive
-        if (i + batchSize < newRikishi.length) {
-          await new Promise(resolve => setTimeout(resolve, 10));
-        }
-      }
+      // Use bulk insert for better performance
+      await bulkAddRikishi(newRikishi);
 
       setImportStats({
-        added: addedCount,
+        added: newRikishi.length,
         skipped: rikishi.length - newRikishi.length,
         total: rikishi.length
       });
@@ -129,6 +120,42 @@ export function WrestlersPage() {
 
   const uniqueRanks = [...new Set(state.rikishi.map(r => r.rank))];
 
+  // Show loading spinner when loading
+  if (state.loading) {
+    return (
+      <div className="animate-fade-in flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-jpblue-600" />
+          <p className="text-gray-600">Loading rikishi data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error message if there's an error
+  if (state.error) {
+    return (
+      <div className="animate-fade-in">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Database Connection Error</h3>
+              <div className="mt-1 text-sm text-red-700">
+                <p>{state.error}</p>
+                <p className="mt-2">Please ensure the backend server is running at http://localhost:3001</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
@@ -140,7 +167,7 @@ export function WrestlersPage() {
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-jpblue-600 via-jpblue-600 to-jpblue-700 bg-clip-text text-transparent">{t('rikishiPageTitle')}</h1>
               <p className="mt-2 text-gray-600">
-                {t('rikishiPageDescription')}
+                {t('rikishiPageDescription')} - Database: {state.rikishi.length} records
               </p>
             </div>
           </div>
@@ -179,7 +206,7 @@ export function WrestlersPage() {
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-green-800">Import Completed Successfully!</h3>
                 <div className="mt-1 text-sm text-green-700">
-                  <p>Added {importStats.added} new rikishi, skipped {importStats.skipped} duplicates. Total processed: {importStats.total}</p>
+                  <p>Added {importStats.added} new rikishi to the database, skipped {importStats.skipped} duplicates. Total processed: {importStats.total}</p>
                 </div>
                 <div className="mt-2">
                   <button
@@ -215,156 +242,97 @@ export function WrestlersPage() {
               className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-jpblue-500 focus:border-jpblue-500 rounded-md"
             >
               <option value="">{t('allRanks')}</option>
-              {uniqueRanks.map(rank => (
-                <option key={rank} value={rank}>{rank}</option>
+              {uniqueRanks.map((rank) => (
+                <option key={rank} value={rank}>
+                  {rank}
+                </option>
               ))}
             </select>
           </div>
         </div>
       </div>
 
-      {/* Wrestlers Grid */}
-      {filteredRikishi.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredRikishi.map((rikishi, index) => (
-            <div
-              key={rikishi.id}
-              className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpblue transition-all duration-300 transform hover:scale-105"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="px-6 py-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
-                        <span className="text-white font-bold text-sm">相</span>
+      {/* Rikishi Table */}
+      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        <ul className="divide-y divide-gray-200">
+          {filteredRikishi.map((rikishi) => (
+            <li key={rikishi.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-jpblue-100 rounded-full flex items-center justify-center">
+                        <Users className="h-6 w-6 text-jpblue-600" />
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-jpblue-700 transition-colors">
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-3">
+                        <p className="text-sm font-medium text-gray-900 truncate">
                           {rikishi.name}
-                        </h3>
-                        <p className="text-sm font-medium text-jpblue-600">{rikishi.rank}</p>
+                        </p>
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          rikishi.rank === 'Yokozuna' ? 'bg-purple-100 text-purple-800' :
+                          rikishi.rank === 'Ozeki' ? 'bg-red-100 text-red-800' :
+                          rikishi.rank === 'Sekiwake' || rikishi.rank === 'Komusubi' ? 'bg-orange-100 text-orange-800' :
+                          rikishi.rank === 'Maegashira' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {rikishi.rank}
+                        </span>
+                      </div>
+                      <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
+                        <span>{rikishi.stable}</span>
+                        <span>{rikishi.height}cm / {rikishi.weight}kg</span>
+                        <span>Win Rate: {getWinRate(rikishi.wins, rikishi.losses)}%</span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 ml-13">{rikishi.stable}</p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(rikishi)}
-                      className="p-2 text-gray-400 hover:text-jpblue-600 hover:bg-jpblue-50 rounded-lg transition-all duration-200"
-                    >
-                      <Edit className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(rikishi.id)}
-                      className="p-2 text-gray-400 hover:text-jpblue-600 hover:bg-jpblue-50 rounded-lg transition-all duration-200"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
                   </div>
                 </div>
-
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">{t('record')}:</span>
-                    <span className="font-medium">
-                      {rikishi.wins}-{rikishi.losses}-{rikishi.draws}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">{t('winRate')}:</span>
-                    <span className="font-medium">
-                      {getWinRate(rikishi.wins, rikishi.losses)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">{t('weight')}:</span>
-                    <span className="font-medium">{rikishi.weight} {t('kg')}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">{t('height')}:</span>
-                    <span className="font-medium">{rikishi.height} {t('cm')}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">{t('debut')}:</span>
-                    <span className="font-medium">
-                      {new Date(rikishi.debut).toLocaleDateString()}
-                    </span>
-                  </div>
-                  {rikishi.shikonaJp && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Shikona (JP):</span>
-                      <span className="font-medium">{rikishi.shikonaJp}</span>
-                    </div>
-                  )}
-                  {rikishi.currentRank && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Current Rank:</span>
-                      <span className="font-medium text-jpblue-600">{rikishi.currentRank}</span>
-                    </div>
-                  )}
-                  {rikishi.shusshin && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Birthplace:</span>
-                      <span className="font-medium">{rikishi.shusshin}</span>
-                    </div>
-                  )}
-                  {rikishi.heya && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Heya:</span>
-                      <span className="font-medium">{rikishi.heya}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-4">
-                  <div className="bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
-                    <div
-                      className="bg-gradient-to-r from-jpblue-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
-                      style={{
-                        width: `${getWinRate(rikishi.wins, rikishi.losses)}%`
-                      }}
-                    />
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => handleEdit(rikishi)}
+                    className="p-2 text-jpblue-600 hover:text-jpblue-700 hover:bg-jpblue-50 rounded-md transition-colors"
+                    title={t('editRikishi')}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(rikishi.id)}
+                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                    title={t('deleteRikishi')}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
-      ) : (
+        </ul>
+      </div>
+
+      {filteredRikishi.length === 0 && (
         <div className="text-center py-12">
-          <div className="mx-auto h-12 w-12 text-gray-400">
-            <Plus className="h-12 w-12" />
-          </div>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
-            {searchTerm || filterRank ? t('noRikishiFound') : t('noRikishiYet')}
-          </h3>
+          <Users className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-2 text-sm font-medium text-gray-900">No rikishi found</h3>
           <p className="mt-1 text-sm text-gray-500">
-            {searchTerm || filterRank
-              ? t('adjustSearchCriteria')
-              : t('getStartedRikishi')}
+            {state.rikishi.length === 0
+              ? 'Get started by importing rikishi data or adding a new rikishi.'
+              : 'Try adjusting your search criteria.'}
           </p>
-          {!searchTerm && !filterRank && (
-            <div className="mt-6">
-              <button
-                onClick={() => setShowForm(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500"
-              >
-                <Plus className="-ml-1 mr-2 h-5 w-5" />
-                {t('addRikishi')}
-              </button>
-            </div>
-          )}
         </div>
       )}
 
       {/* Form Modal */}
       {showForm && (
-        <WrestlerForm
-          wrestler={editingRikishi}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-        />
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <WrestlerForm
+              wrestler={editingRikishi}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

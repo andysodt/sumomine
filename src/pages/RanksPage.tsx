@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from 'react';
-import { Award, TrendingUp, TrendingDown, Search, Download, RefreshCw } from 'lucide-react';
-import { useSumo } from '../context/SumoContext';
+import { useState, useMemo } from 'react';
+import { Award, TrendingUp, TrendingDown, Search, Download, RefreshCw, Crown, Star, Target, Zap, Calendar } from 'lucide-react';
+import { useSumoDB } from '../context/SumoContextDB';
 import { SumoApiService } from '../services/sumoApi';
 import type { RankEntity } from '../types';
 
 export function RanksPage() {
-  const { state, loadRanks } = useSumo();
+  const { state, loadRanks } = useSumoDB();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDivision, setSelectedDivision] = useState<string>('all');
   const [selectedSide, setSelectedSide] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'rank' | 'division'>('rank');
+  const [sortBy, setSortBy] = useState<'name' | 'rank' | 'division' | 'prestige' | 'rankingScore' | 'divisionPosition'>('rank');
   const [isLoading, setIsLoading] = useState(false);
 
   const divisions = useMemo(() => {
@@ -20,7 +20,7 @@ export function RanksPage() {
 
   const filteredAndSortedRanks = useMemo(() => {
     if (!state.ranks) return [];
-    let filtered = state.ranks.filter(rank => {
+    const filtered = state.ranks.filter(rank => {
       const matchesSearch = rank.rikishiName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           rank.rank.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDivision = selectedDivision === 'all' || rank.division === selectedDivision;
@@ -36,6 +36,16 @@ export function RanksPage() {
           return a.rankValue - b.rankValue;
         case 'division':
           return (a.division || '').localeCompare(b.division || '');
+        case 'prestige': {
+          const prestigeOrder = { 'Elite': 4, 'Professional': 3, 'Amateur': 2, 'Beginner': 1 };
+          return (prestigeOrder[b.prestige || 'Beginner'] || 0) - (prestigeOrder[a.prestige || 'Beginner'] || 0);
+        }
+        case 'rankingScore':
+          return (b.rankingScore || 0) - (a.rankingScore || 0);
+        case 'divisionPosition': {
+          const positionOrder = { 'Top': 3, 'Middle': 2, 'Bottom': 1 };
+          return (positionOrder[b.divisionPosition || 'Bottom'] || 0) - (positionOrder[a.divisionPosition || 'Bottom'] || 0);
+        }
         default:
           return 0;
       }
@@ -92,7 +102,7 @@ export function RanksPage() {
       case 'jonidan':
         return 'text-orange-600';
       case 'jonokuchi':
-        return 'text-red-600';
+        return 'text-jpblue-600';
       default:
         return 'text-gray-600';
     }
@@ -209,12 +219,15 @@ export function RanksPage() {
 
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'name' | 'rank' | 'division')}
+            onChange={(e) => setSortBy(e.target.value as 'name' | 'rank' | 'division' | 'prestige' | 'rankingScore' | 'divisionPosition')}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
           >
             <option value="rank">Sort by Rank</option>
             <option value="name">Sort by Name</option>
             <option value="division">Sort by Division</option>
+            <option value="prestige">Sort by Prestige</option>
+            <option value="rankingScore">Sort by Ranking Score</option>
+            <option value="divisionPosition">Sort by Division Position</option>
           </select>
         </div>
 
@@ -225,9 +238,12 @@ export function RanksPage() {
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Rikishi</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Rank</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Division</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Prestige</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Position</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Side</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Rank Value</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Basho</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Score</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Target</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Season</th>
               </tr>
             </thead>
             <tbody>
@@ -237,11 +253,25 @@ export function RanksPage() {
                     <div className="font-medium text-gray-900">
                       {rank.rikishiName || `Rikishi ${rank.rikishiId}`}
                     </div>
+                    {rank.rankPercentile && (
+                      <div className="text-xs text-gray-500">
+                        {rank.rankPercentile}th percentile
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-4">
                     <span className={`font-medium ${getRankDisplayColor(rank)}`}>
                       {rank.rank}
                     </span>
+                    {rank.rankingTrend && (
+                      <div className={`text-xs mt-1 ${
+                        rank.rankingTrend === 'Rising' ? 'text-green-600' :
+                        rank.rankingTrend === 'Stable' ? 'text-blue-600' :
+                        'text-red-600'
+                      }`}>
+                        {rank.rankingTrend}
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRankDisplayColor(rank)} bg-opacity-10`}>
@@ -249,18 +279,67 @@ export function RanksPage() {
                     </span>
                   </td>
                   <td className="py-3 px-4">
+                    {rank.prestige && (
+                      <div className={`flex items-center text-xs px-2 py-1 rounded-md ${
+                        rank.prestige === 'Elite' ? 'text-purple-600 bg-purple-50' :
+                        rank.prestige === 'Professional' ? 'text-blue-600 bg-blue-50' :
+                        rank.prestige === 'Amateur' ? 'text-green-600 bg-green-50' :
+                        'text-gray-600 bg-gray-50'
+                      }`}>
+                        {rank.prestige === 'Elite' ? <Crown className="h-3 w-3 mr-1" /> :
+                         rank.prestige === 'Professional' ? <Star className="h-3 w-3 mr-1" /> :
+                         rank.prestige === 'Amateur' ? <Target className="h-3 w-3 mr-1" /> :
+                         <Zap className="h-3 w-3 mr-1" />}
+                        {rank.prestige}
+                      </div>
+                    )}
+                  </td>
+                  <td className="py-3 px-4">
+                    {rank.divisionPosition && (
+                      <span className={`text-xs px-2 py-1 rounded-md ${
+                        rank.divisionPosition === 'Top' ? 'text-green-600 bg-green-50' :
+                        rank.divisionPosition === 'Middle' ? 'text-yellow-600 bg-yellow-50' :
+                        'text-red-600 bg-red-50'
+                      }`}>
+                        {rank.divisionPosition}
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       {getSideIcon(rank.side)}
                       <span className="text-sm text-gray-600">{rank.side || 'Unknown'}</span>
+                      {rank.eastWestAdvantage === 'East' && (
+                        <span className="text-xs text-orange-600">⭐</span>
+                      )}
                     </div>
                   </td>
-                  <td className="py-3 px-4 text-gray-600">{rank.rankValue}</td>
-                  <td className="py-3 px-4 text-gray-600">{rank.bashoId}</td>
+                  <td className="py-3 px-4">
+                    <span className="font-medium text-jpblue-600">
+                      {rank.rankingScore || rank.rankValue}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">
+                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-md">
+                      {rank.nextRankTarget || 'N/A'}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      <span>{rank.seasonName || rank.bashoId}</span>
+                    </div>
+                    {rank.year && (
+                      <div className="text-xs text-gray-500">
+                        {rank.year}
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
               {filteredAndSortedRanks.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-8 px-4 text-center text-gray-500">
+                  <td colSpan={9} className="py-8 px-4 text-center text-gray-500">
                     {(state.ranks?.length || 0) === 0 ? 'No ranks data available. Import ranks to get started.' : 'No ranks match your search criteria.'}
                   </td>
                 </tr>

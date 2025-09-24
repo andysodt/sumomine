@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Download, Search, Ruler, TrendingUp, AlertCircle, BarChart3 } from 'lucide-react';
-import { useSumo } from '../context/SumoContext';
+import { useState } from 'react';
+import { Download, Search, Ruler, TrendingUp, AlertCircle, BarChart3, Award, Scale, Target, Zap } from 'lucide-react';
+import { useSumoDB } from '../context/SumoContextDB';
 import { useLanguage } from '../context/LanguageContext';
-import { MeasurementEntity } from '../types';
 import { SumoApiService } from '../services/sumoApi';
 
 export function MeasurementsPage() {
-  const { state, loadMeasurements } = useSumo();
-  const { t } = useLanguage();
+  const { state, loadMeasurements } = useSumoDB();
+  useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRikishi, setFilterRikishi] = useState('');
-  const [sortBy, setSortBy] = useState<'height' | 'weight' | 'bmi' | 'rikishiName'>('bmi');
+  const [sortBy, setSortBy] = useState<'height' | 'weight' | 'bmi' | 'rikishiName' | 'powerIndex' | 'heightPercentile' | 'weightPercentile' | 'bmiCategory'>('bmi');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,6 +31,16 @@ export function MeasurementsPage() {
         return (b.bmi || 0) - (a.bmi || 0);
       case 'rikishiName':
         return (a.rikishiName || '').localeCompare(b.rikishiName || '');
+      case 'powerIndex':
+        return (b.powerIndex || 0) - (a.powerIndex || 0);
+      case 'heightPercentile':
+        return (b.heightPercentile || 0) - (a.heightPercentile || 0);
+      case 'weightPercentile':
+        return (b.weightPercentile || 0) - (a.weightPercentile || 0);
+      case 'bmiCategory': {
+        const categoryOrder = { 'Sumo Elite': 5, 'Obese': 4, 'Overweight': 3, 'Normal': 2, 'Underweight': 1 };
+        return (categoryOrder[b.bmiCategory || 'Normal'] || 0) - (categoryOrder[a.bmiCategory || 'Normal'] || 0);
+      }
       default:
         return 0;
     }
@@ -93,7 +102,7 @@ export function MeasurementsPage() {
     if (bmi < 18.5) return 'text-blue-600';
     if (bmi < 25) return 'text-green-600';
     if (bmi < 30) return 'text-yellow-600';
-    return 'text-red-600';
+    return 'text-jpblue-600';
   };
 
   return (
@@ -101,11 +110,11 @@ export function MeasurementsPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpred-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
+            <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
               <Ruler className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-jpblue-600 via-jpred-600 to-jpred-700 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-jpblue-600 via-jpblue-600 to-jpblue-700 bg-clip-text text-transparent">
                 Measurements
               </h1>
               <p className="mt-2 text-gray-600">
@@ -153,14 +162,14 @@ export function MeasurementsPage() {
               placeholder="Search measurements..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-red-500 focus:border-red-500"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-jpblue-500 focus:border-jpblue-500"
             />
           </div>
           <div>
             <select
               value={filterRikishi}
               onChange={(e) => setFilterRikishi(e.target.value)}
-              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-jpblue-500 focus:border-jpblue-500 rounded-md"
             >
               <option value="">All Rikishi</option>
               {uniqueRikishi.map(rikishi => (
@@ -173,12 +182,16 @@ export function MeasurementsPage() {
           <div>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'height' | 'weight' | 'bmi' | 'rikishiName')}
-              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-md"
+              onChange={(e) => setSortBy(e.target.value as 'height' | 'weight' | 'bmi' | 'rikishiName' | 'powerIndex' | 'heightPercentile' | 'weightPercentile' | 'bmiCategory')}
+              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-jpblue-500 focus:border-jpblue-500 rounded-md"
             >
               <option value="bmi">Sort by BMI</option>
               <option value="height">Sort by Height</option>
               <option value="weight">Sort by Weight</option>
+              <option value="powerIndex">Sort by Power Index</option>
+              <option value="heightPercentile">Sort by Height Percentile</option>
+              <option value="weightPercentile">Sort by Weight Percentile</option>
+              <option value="bmiCategory">Sort by BMI Category</option>
               <option value="rikishiName">Sort by Name</option>
             </select>
           </div>
@@ -187,7 +200,7 @@ export function MeasurementsPage() {
 
       {/* Statistics Summary */}
       {state.measurements.length > 0 && (
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-600 rounded-lg flex items-center justify-center">
@@ -212,8 +225,8 @@ export function MeasurementsPage() {
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-br from-jpred-500 to-jpred-600 rounded-lg flex items-center justify-center">
-                <Ruler className="h-5 w-5 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-600 rounded-lg flex items-center justify-center">
+                <Scale className="h-5 w-5 text-white" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Avg Weight</p>
@@ -224,7 +237,7 @@ export function MeasurementsPage() {
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-white" />
+                <Target className="h-5 w-5 text-white" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Avg BMI</p>
@@ -241,39 +254,82 @@ export function MeasurementsPage() {
           {sortedMeasurements.map((measurement, index) => (
             <div
               key={measurement.id}
-              className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpred transition-all duration-300 transform hover:scale-105"
+              className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpblue transition-all duration-300 transform hover:scale-105"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="px-6 py-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <div className="w-10 h-10 bg-gradient-to-br from-jpred-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
+                      <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
                         <span className="text-white font-bold text-sm">測</span>
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-jpred-700 transition-colors">
+                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-jpblue-700 transition-colors">
                           {measurement.rikishiName || `Rikishi ${measurement.rikishiId}`}
                         </h3>
-                        <p className="text-sm font-medium text-jpred-600">{measurement.bashoId}</p>
+                        <div className="flex items-center space-x-2">
+                          <p className="text-sm font-medium text-jpblue-600">{measurement.seasonName || measurement.bashoId}</p>
+                          {measurement.year && (
+                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+                              {measurement.year}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-4 space-y-3">
+                  {/* Enhanced badges */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {measurement.bmiCategory && (
+                      <div className={`flex items-center text-xs px-2 py-1 rounded-md ${
+                        measurement.bmiCategory === 'Sumo Elite' ? 'text-purple-600 bg-purple-50' :
+                        measurement.bmiCategory === 'Obese' ? 'text-red-600 bg-red-50' :
+                        measurement.bmiCategory === 'Overweight' ? 'text-orange-600 bg-orange-50' :
+                        measurement.bmiCategory === 'Normal' ? 'text-green-600 bg-green-50' :
+                        'text-blue-600 bg-blue-50'
+                      }`}>
+                        <Award className="h-3 w-3 mr-1" />
+                        {measurement.bmiCategory}
+                      </div>
+                    )}
+                    {measurement.powerIndex && (
+                      <div className="flex items-center text-xs text-jpblue-600 bg-jpblue-50 px-2 py-1 rounded-md">
+                        <Zap className="h-3 w-3 mr-1" />
+                        Power: {measurement.powerIndex}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Height:</span>
-                      <span className="font-medium text-jpblue-600">
-                        {measurement.height} cm
-                      </span>
+                      <div className="text-right">
+                        <span className="font-medium text-jpblue-600">
+                          {measurement.height} cm
+                        </span>
+                        {measurement.heightPercentile && (
+                          <div className="text-xs text-gray-500">
+                            {measurement.heightPercentile}th percentile
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Weight:</span>
-                      <span className="font-medium text-jpred-600">
-                        {measurement.weight} kg
-                      </span>
+                      <div className="text-right">
+                        <span className="font-medium text-jpblue-600">
+                          {measurement.weight} kg
+                        </span>
+                        {measurement.weightPercentile && (
+                          <div className="text-xs text-gray-500">
+                            {measurement.weightPercentile}th percentile
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">BMI:</span>
@@ -288,13 +344,43 @@ export function MeasurementsPage() {
                         )}
                       </div>
                     </div>
+                    {measurement.weightHeightRatio && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Weight/Height Ratio:</span>
+                        <span className="font-medium text-jpblue-600">
+                          {measurement.weightHeightRatio}
+                        </span>
+                      </div>
+                    )}
+                    {measurement.comparisonToAverage && (
+                      <>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500">vs Avg Height:</span>
+                          <span className={`font-medium ${
+                            measurement.comparisonToAverage.heightDiff > 0 ? 'text-green-600' :
+                            measurement.comparisonToAverage.heightDiff < 0 ? 'text-red-600' : 'text-gray-600'
+                          }`}>
+                            {measurement.comparisonToAverage.heightDiff > 0 ? '+' : ''}{measurement.comparisonToAverage.heightDiff} cm
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500">vs Avg Weight:</span>
+                          <span className={`font-medium ${
+                            measurement.comparisonToAverage.weightDiff > 0 ? 'text-green-600' :
+                            measurement.comparisonToAverage.weightDiff < 0 ? 'text-red-600' : 'text-gray-600'
+                          }`}>
+                            {measurement.comparisonToAverage.weightDiff > 0 ? '+' : ''}{measurement.comparisonToAverage.weightDiff} kg
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {measurement.bmi && (
                     <div className="mt-4">
                       <div className="bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
                         <div
-                          className="bg-gradient-to-r from-jpred-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
+                          className="bg-gradient-to-r from-jpblue-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
                           style={{
                             width: `${Math.min(100, Math.max(5, (measurement.bmi / 40) * 100))}%`
                           }}
@@ -325,7 +411,7 @@ export function MeasurementsPage() {
               <button
                 onClick={handleImportMeasurements}
                 disabled={isLoading}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 disabled:opacity-50"
               >
                 <Download className="-ml-1 mr-2 h-5 w-5" />
                 {isLoading ? 'Importing...' : 'Import Measurements'}

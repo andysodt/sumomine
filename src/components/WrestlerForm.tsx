@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { X } from 'lucide-react';
-import { Rikishi, SumoRank } from '../types';
+import type { Rikishi, SumoRank } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 
 interface RikishiFormProps {
@@ -26,6 +27,8 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
   const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: wrestler?.name || '',
+    shikonaEn: wrestler?.shikonaEn || '',
+    shikonaJp: wrestler?.shikonaJp || '',
     rank: wrestler?.rank || 'Maegashira' as SumoRank,
     stable: wrestler?.stable || '',
     weight: wrestler?.weight || 0,
@@ -35,9 +38,15 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
     wins: wrestler?.wins || 0,
     losses: wrestler?.losses || 0,
     draws: wrestler?.draws || 0,
+    // New fields
+    currentRank: wrestler?.currentRank || '',
+    heya: wrestler?.heya || '',
+    shusshin: wrestler?.shusshin || '',
+    sumodbId: wrestler?.sumodbId || undefined,
+    nskId: wrestler?.nskId || undefined,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const rikishiData: Rikishi = {
@@ -61,10 +70,10 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
       <div className="relative top-10 mx-auto p-6 border w-full max-w-2xl shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border-gray-200 animate-slide-in">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-jpred-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">相</span>
             </div>
-            <h3 className="text-xl font-semibold bg-gradient-to-r from-jpred-600 to-jpblue-600 bg-clip-text text-transparent">
+            <h3 className="text-xl font-semibold bg-gradient-to-r from-jpblue-600 to-jpblue-600 bg-clip-text text-transparent">
               {wrestler ? t('editRikishi') : t('addNewRikishi')}
             </h3>
           </div>
@@ -89,7 +98,35 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="shikonaEn" className="block text-sm font-medium text-gray-700">
+                Shikona (English)
+              </label>
+              <input
+                type="text"
+                id="shikonaEn"
+                name="shikonaEn"
+                value={formData.shikonaEn}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="shikonaJp" className="block text-sm font-medium text-gray-700">
+                Shikona (Japanese)
+              </label>
+              <input
+                type="text"
+                id="shikonaJp"
+                name="shikonaJp"
+                value={formData.shikonaJp}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -102,7 +139,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 name="rank"
                 value={formData.rank}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               >
                 {sumoRanks.map(rank => (
                   <option key={rank} value={rank}>{rank}</option>
@@ -121,7 +158,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 required
                 value={formData.stable}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -137,7 +174,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 required
                 value={formData.weight}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -153,7 +190,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 required
                 value={formData.height}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -168,7 +205,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 required
                 value={formData.birthDate}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -183,7 +220,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 required
                 value={formData.debut}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -198,7 +235,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 min="0"
                 value={formData.wins}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -213,7 +250,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 min="0"
                 value={formData.losses}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
 
@@ -228,7 +265,77 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
                 min="0"
                 value={formData.draws}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpred-500 focus:border-jpred-500 transition-all duration-200 hover:border-jpred-300"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="currentRank" className="block text-sm font-medium text-gray-700">
+                Current Rank (API)
+              </label>
+              <input
+                type="text"
+                id="currentRank"
+                name="currentRank"
+                value={formData.currentRank}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="heya" className="block text-sm font-medium text-gray-700">
+                Heya (Stable)
+              </label>
+              <input
+                type="text"
+                id="heya"
+                name="heya"
+                value={formData.heya}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="shusshin" className="block text-sm font-medium text-gray-700">
+                Birthplace (Shusshin)
+              </label>
+              <input
+                type="text"
+                id="shusshin"
+                name="shusshin"
+                value={formData.shusshin}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="sumodbId" className="block text-sm font-medium text-gray-700">
+                SumoDB ID
+              </label>
+              <input
+                type="number"
+                id="sumodbId"
+                name="sumodbId"
+                value={formData.sumodbId}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="nskId" className="block text-sm font-medium text-gray-700">
+                NSK ID
+              </label>
+              <input
+                type="number"
+                id="nskId"
+                name="nskId"
+                value={formData.nskId}
+                onChange={handleChange}
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-jpblue-500 focus:border-jpblue-500 transition-all duration-200 hover:border-jpblue-300"
               />
             </div>
           </div>
@@ -237,13 +344,13 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpred-500 transition-all duration-200"
+              className="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200"
             >
               {t('cancel')}
             </button>
             <button
               type="submit"
-              className="px-6 py-2 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-gradient-to-r from-jpred-600 to-jpblue-600 hover:from-jpred-700 hover:to-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpred-500 transition-all duration-200 transform hover:scale-105"
+              className="px-6 py-2 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-gradient-to-r from-jpblue-600 to-jpblue-600 hover:from-jpblue-700 hover:to-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
             >
               {wrestler ? t('updateRikishi') : t('createRikishi')}
             </button>

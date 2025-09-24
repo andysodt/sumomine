@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Swords, Calendar, Search, Download, RefreshCw, Crown, Clock } from 'lucide-react';
-import { useSumo } from '../context/SumoContext';
+import { useSumoDB } from '../context/SumoContextDB';
 import { SumoApiService } from '../services/sumoApi';
 import type { TorikumiEntity } from '../types';
 
 export function TorikumiPage() {
-  const { state, loadTorikumi } = useSumo();
+  const { state, loadTorikumi } = useSumoDB();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDivision, setSelectedDivision] = useState<string>('all');
   const [selectedDay, setSelectedDay] = useState<string>('all');
@@ -28,26 +28,28 @@ export function TorikumiPage() {
   const filteredAndSortedTorikumi = useMemo(() => {
     if (!state.torikumi) return [];
     const filtered = state.torikumi.filter(match => {
-      const matchesSearch = match.rikishi1Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          match.rikishi2Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          match.winnerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          match.kimarite?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = (match.eastShikona || match.rikishi1Name)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (match.westShikona || match.rikishi2Name)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (match.winnerEn || match.winnerName)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          match.kimarite?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (match.eastRank || '')?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (match.westRank || '')?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDivision = selectedDivision === 'all' || match.division === selectedDivision;
       const matchesDay = selectedDay === 'all' || match.day.toString() === selectedDay;
       const matchesStatus = selectedStatus === 'all' ||
-                           (selectedStatus === 'decided' && match.isDecided) ||
-                           (selectedStatus === 'pending' && !match.isDecided);
+                           (selectedStatus === 'decided' && (match.isDecided ?? true)) ||  // Default to true if not set (API data is always decided)
+                           (selectedStatus === 'pending' && (match.isDecided === false));
       return matchesSearch && matchesDivision && matchesDay && matchesStatus;
     });
 
     return filtered.sort((a, b) => {
       switch (sortBy) {
         case 'day':
-          return a.day - b.day || (a.matchNumber || 0) - (b.matchNumber || 0);
+          return a.day - b.day || (a.matchNo || a.matchNumber || 0) - (b.matchNo || b.matchNumber || 0);
         case 'division':
           return a.division.localeCompare(b.division) || a.day - b.day;
         case 'match':
-          return (a.matchNumber || 0) - (b.matchNumber || 0);
+          return (a.matchNo || a.matchNumber || 0) - (b.matchNo || b.matchNumber || 0);
         case 'year':
           return (b.year || 0) - (a.year || 0) || (b.month || 0) - (a.month || 0);
         default:
@@ -58,8 +60,8 @@ export function TorikumiPage() {
 
   const stats = useMemo(() => {
     const totalMatches = state.torikumi?.length || 0;
-    const decidedMatches = state.torikumi?.filter(match => match.isDecided).length || 0;
-    const pendingMatches = totalMatches - decidedMatches;
+    const decidedMatches = state.torikumi?.filter(match => match.isDecided ?? true).length || 0;  // API data is always decided
+    const pendingMatches = state.torikumi?.filter(match => match.isDecided === false).length || 0;
 
     const divisionCounts = divisions.reduce((acc, division) => {
       if (division) {
@@ -86,7 +88,7 @@ export function TorikumiPage() {
     try {
       // Get recent bashos for torikumi import
       const bashos = await SumoApiService.fetchBashos();
-      const recentBashoIds = bashos.slice(0, 2).map(b => b.id); // Get latest 2 bashos
+      const recentBashoIds = bashos.slice(0, 2).map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id)); // Get latest 2 bashos
       const torikumi = await SumoApiService.fetchAllTorikumiEntities(recentBashoIds);
       loadTorikumi(torikumi);
     } catch (error) {
@@ -109,7 +111,7 @@ export function TorikumiPage() {
       case 'jonidan':
         return 'text-orange-600 bg-orange-100';
       case 'jonokuchi':
-        return 'text-red-600 bg-red-100';
+        return 'text-jpblue-600 bg-jpblue-100';
       default:
         return 'text-gray-600 bg-gray-100';
     }
@@ -133,7 +135,7 @@ export function TorikumiPage() {
   };
 
   const getWinnerDisplay = (match: TorikumiEntity) => {
-    if (!match.isDecided) {
+    if (!match.isDecided && match.isDecided !== undefined) {
       return <span className="text-gray-500 italic">TBD</span>;
     }
     if (match.winnerName) {
@@ -147,18 +149,58 @@ export function TorikumiPage() {
     return <span className="text-gray-500">Unknown</span>;
   };
 
+  const getWinnerDisplayEnhanced = (match: TorikumiEntity) => {
+    const winnerName = match.winnerEn || match.winnerName;
+    if (!winnerName) {
+      return <span className="text-gray-500">TBD</span>;
+    }
+
+    const isEastWinner = match.winnerId === (match.eastId || match.rikishi1Id);
+    const winnerSide = isEastWinner ? 'E' : 'W';
+
+    return (
+      <div className="flex items-center gap-1">
+        <Crown className="h-3 w-3 text-yellow-500" />
+        <span className="font-medium text-gray-900">{winnerName}</span>
+        <span className={`text-xs px-1 rounded ${isEastWinner ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'}`}>
+          {winnerSide}
+        </span>
+      </div>
+    );
+  };
+
+  const getTechniqueColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Extreme': return 'text-red-600';
+      case 'Hard': return 'text-orange-600';
+      case 'Medium': return 'text-yellow-600';
+      case 'Easy': return 'text-green-600';
+      default: return 'text-gray-600';
+    }
+  };
+
+  const getMatchTypeColor = (matchType: string) => {
+    switch (matchType) {
+      case 'Senshuraku': return 'text-red-700 bg-red-100';
+      case 'Playoff': return 'text-purple-700 bg-purple-100';
+      case 'Special': return 'text-yellow-700 bg-yellow-100';
+      case 'Regular': return 'text-gray-700 bg-gray-100';
+      default: return 'text-gray-700 bg-gray-100';
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <Swords className="h-8 w-8 text-red-600" />
+          <Swords className="h-8 w-8 text-jpblue-600" />
           <h1 className="text-3xl font-bold text-gray-900">Torikumi</h1>
           <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Tournament Matches</span>
         </div>
         <button
           onClick={handleImportTorikumi}
           disabled={isLoading}
-          className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50"
+          className="flex items-center gap-2 bg-jpblue-600 text-white px-4 py-2 rounded-lg hover:bg-jpblue-700 disabled:opacity-50"
         >
           {isLoading ? (
             <RefreshCw className="h-4 w-4 animate-spin" />
@@ -176,7 +218,7 @@ export function TorikumiPage() {
               <p className="text-sm font-medium text-gray-600">Total Matches</p>
               <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <Swords className="h-8 w-8 text-red-600" />
+            <Swords className="h-8 w-8 text-jpblue-600" />
           </div>
         </div>
 
@@ -203,7 +245,7 @@ export function TorikumiPage() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div>
             <p className="text-sm font-medium text-gray-600 mb-2">Latest Tournament</p>
-            <p className="text-lg font-bold text-red-600 mb-2">{stats.latestTournament}</p>
+            <p className="text-lg font-bold text-jpblue-600 mb-2">{stats.latestTournament}</p>
             <div className="space-y-1">
               {Object.entries(stats.divisions).slice(0, 2).map(([division, count]) => (
                 <div key={division} className="flex justify-between text-xs">
@@ -226,7 +268,7 @@ export function TorikumiPage() {
                 placeholder="Search by rikishi names, winner, or kimarite..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
               />
             </div>
           </div>
@@ -234,7 +276,7 @@ export function TorikumiPage() {
           <select
             value={selectedDivision}
             onChange={(e) => setSelectedDivision(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="all">All Divisions</option>
             {divisions.map(division => (
@@ -245,7 +287,7 @@ export function TorikumiPage() {
           <select
             value={selectedDay}
             onChange={(e) => setSelectedDay(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="all">All Days</option>
             {days.map(day => (
@@ -256,7 +298,7 @@ export function TorikumiPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="all">All Status</option>
             <option value="decided">Decided</option>
@@ -266,7 +308,7 @@ export function TorikumiPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'day' | 'division' | 'match' | 'year')}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="day">Sort by Day</option>
             <option value="division">Sort by Division</option>
@@ -280,11 +322,13 @@ export function TorikumiPage() {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Day</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Matchup</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Match #</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">East</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">West</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Division</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Winner</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Kimarite</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-600">Match Type</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-600">Tournament</th>
               </tr>
             </thead>
@@ -298,12 +342,29 @@ export function TorikumiPage() {
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="font-medium text-gray-900">
-                      {formatMatchup(match)}
+                    <div className="font-mono text-sm text-gray-700">
+                      #{match.matchNo || match.matchNumber || '-'}
                     </div>
-                    {match.time && (
-                      <div className="text-xs text-gray-500">{match.time}</div>
-                    )}
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900">
+                        {match.eastShikona || match.rikishi1Name || `Rikishi ${match.eastId || match.rikishi1Id}`}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {match.eastRank || 'Unknown rank'}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900">
+                        {match.westShikona || match.rikishi2Name || `Rikishi ${match.westId || match.rikishi2Id}`}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {match.westRank || 'Unknown rank'}
+                      </div>
+                    </div>
                   </td>
                   <td className="py-3 px-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDivisionColor(match.division)}`}>
@@ -311,24 +372,43 @@ export function TorikumiPage() {
                     </span>
                   </td>
                   <td className="py-3 px-4">
-                    {getWinnerDisplay(match)}
+                    {getWinnerDisplayEnhanced(match)}
                   </td>
                   <td className="py-3 px-4">
-                    <span className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600">
                       {match.kimarite || '-'}
-                    </span>
+                    </div>
+                    {match.technique?.difficulty && (
+                      <div className={`text-xs ${getTechniqueColor(match.technique.difficulty)}`}>
+                        {match.technique.difficulty}
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(match.isDecided)}`}>
-                      {match.isDecided ? 'Decided' : 'Pending'}
-                    </span>
+                    {match.matchType && (
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getMatchTypeColor(match.matchType)}`}>
+                        {match.matchType}
+                      </span>
+                    )}
+                    {match.upsetProbability && match.upsetProbability !== 'Expected' && (
+                      <div className="text-xs text-red-600 mt-1">
+                        {match.upsetProbability}
+                      </div>
+                    )}
                   </td>
-                  <td className="py-3 px-4 text-gray-600">{formatDate(match)}</td>
+                  <td className="py-3 px-4">
+                    <div className="text-sm text-gray-600">{formatDate(match)}</div>
+                    {match.seasonName && (
+                      <div className="text-xs text-gray-500">
+                        {match.seasonName}
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
               {filteredAndSortedTorikumi.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-8 px-4 text-center text-gray-500">
+                  <td colSpan={9} className="py-8 px-4 text-center text-gray-500">
                     {(state.torikumi?.length || 0) === 0 ? 'No torikumi data available. Import torikumi to get started.' : 'No matches match your search criteria.'}
                   </td>
                 </tr>

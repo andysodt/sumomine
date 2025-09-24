@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, createElement } from 'react';
 import {
   Database,
   Users,
@@ -17,8 +17,8 @@ import {
 import { ComprehensiveImportService } from '../services/comprehensiveImport';
 import type { ImportOptions, ImportStats } from '../services/comprehensiveImport';
 import { useLanguage } from '../context/LanguageContext';
-import { useSumo } from '../context/SumoContext';
-import { SumoApiService, mapRikishiMatchToBout, mapKimariiteToEntity, mapShikonaToEntity, mapBanzukeToEntity, mapTorikumiToEntity } from '../services/sumoApi';
+import { useSumoDB } from '../context/SumoContextDB';
+import { SumoApiService, mapRikishiMatchToBout, mapKimariiteToEntity } from '../services/sumoApi';
 
 interface ComprehensiveImportProps {
   onImportComplete?: (stats: ImportStats) => void;
@@ -26,7 +26,7 @@ interface ComprehensiveImportProps {
 
 export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportProps) {
   const { } = useLanguage();
-  const { state, addRikishi, addBasho, addBout, loadKimarite, loadMeasurements, loadRanks, loadShikonas, loadBanzuke, loadTorikumi } = useSumo();
+  const { state, addRikishi, addBasho, addBout, loadKimarite, loadMeasurements, loadRanks, loadShikonas, loadBanzuke, loadTorikumi } = useSumoDB();
   const [isOpen, setIsOpen] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [importProgress, setImportProgress] = useState({ step: '', percentage: 0 });
@@ -186,7 +186,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
           if (bashoData && bashoData.length > 0) {
             for (const basho of bashoData) {
               try {
-                const convertedBasho = SumoApiService.convertBashoToBasho(basho);
+                const convertedBasho = SumoApiService.convertBashoToBasho(basho, basho.id.toString());
                 addBasho(convertedBasho);
                 bashoCount++;
               } catch (error) {
@@ -306,7 +306,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         try {
           // Get recent bashos for torikumi import
           const bashos = await SumoApiService.fetchBashos();
-          const recentBashoIds = bashos.slice(0, 2).map(b => b.id); // Get latest 2 bashos
+          const recentBashoIds = bashos.slice(0, 2).map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id)); // Get latest 2 bashos
           const torikumi = await SumoApiService.fetchAllTorikumiEntities(recentBashoIds);
           loadTorikumi(torikumi);
           torikumiCount = torikumi.length;
@@ -437,7 +437,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
     switch (status) {
       case 'online': return 'text-green-600';
       case 'limited': return 'text-yellow-600';
-      case 'offline': return 'text-red-600';
+      case 'offline': return 'text-jpblue-600';
       default: return 'text-gray-600';
     }
   };
@@ -512,7 +512,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
                       {importStats.errors.length} error(s):
                     </div>
                     {importStats.errors.map((error, index) => (
-                      <div key={index} className="text-red-600 text-xs font-mono bg-red-50 p-2 rounded border max-h-32 overflow-y-auto">
+                      <div key={index} className="text-jpblue-600 text-xs font-mono bg-jpblue-50 p-2 rounded border max-h-32 overflow-y-auto">
                         {error}
                       </div>
                     ))}
@@ -575,7 +575,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
             {/* API Status */}
             {apiSummary && (
               <div className="flex items-center space-x-2 text-xs">
-                {React.createElement(getStatusIcon(apiSummary.apiStatus), {
+                {createElement(getStatusIcon(apiSummary.apiStatus), {
                   className: `h-4 w-4 ${getStatusColor(apiSummary.apiStatus)}`
                 })}
                 <span className={getStatusColor(apiSummary.apiStatus)}>

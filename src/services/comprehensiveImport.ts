@@ -1,5 +1,6 @@
-import { SumoApiService, RikishiData, mapTorikumiToBout } from './sumoApi';
-import { Rikishi, Basho, Bout, BashoData, KimariiteEntity, MeasurementEntity, RankEntity, ShikonaEntity, BanzukeEntity, TorikumiEntity } from '../types';
+import { SumoApiService, mapTorikumiToBout } from './sumoApi';
+import type { RikishiData } from './sumoApi';
+import type { Rikishi, Basho, Bout, BashoData, KimariiteEntity, MeasurementEntity, RankEntity, ShikonaEntity, BanzukeEntity, TorikumiEntity } from '../types';
 
 export interface ImportStats {
   rikishi: number;
@@ -231,7 +232,7 @@ export class ComprehensiveImportService {
         for (const basho of bashoData) {
           try {
             // Convert basho to internal format
-            const convertedBasho = SumoApiService.convertBashoToBasho(basho);
+            const convertedBasho = SumoApiService.convertBashoToBasho(basho, basho.id.toString());
             console.log(`Converted basho: ${convertedBasho.name}`);
             count++;
           } catch (error) {
@@ -320,7 +321,7 @@ export class ComprehensiveImportService {
       console.log('Attempting to import kimarite data from Sumo API...');
 
       // Try different sorting options to get kimarite data
-      const sortOptions = ['count', 'kimarite', 'lastusage'];
+      const sortOptions: ('count' | 'kimarite' | 'lastusage')[] = ['count', 'kimarite', 'lastusage'];
       let kimariiteData: KimariiteEntity[] = [];
 
       for (const sortBy of sortOptions) {
@@ -330,7 +331,7 @@ export class ComprehensiveImportService {
 
           if (data && data.length > 0) {
             console.log(`Successfully fetched ${data.length} kimarite records with sort: ${sortBy}`);
-            kimariiteData = data;
+            kimariiteData = SumoApiService.convertKimariiteToEntities(data);
             break;
           }
         } catch (error) {
@@ -546,7 +547,7 @@ export class ComprehensiveImportService {
 
       // Try to get recent basho IDs for torikumi import
       const bashos = await SumoApiService.fetchBashos();
-      const recentBashoIds = bashos.slice(0, 3).map(b => b.id); // Get latest 3 bashos
+      const recentBashoIds = bashos.slice(0, 3).map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id)); // Get latest 3 bashos
 
       if (recentBashoIds.length > 0) {
         console.log(`Fetching torikumi for ${recentBashoIds.length} recent bashos: ${recentBashoIds.join(', ')}`);

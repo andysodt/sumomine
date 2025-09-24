@@ -1,10 +1,9 @@
-import React from 'react';
 import { BarChart3, TrendingUp, Users, Trophy } from 'lucide-react';
-import { useSumo } from '../context/SumoContext';
+import { useSumoDB } from '../context/SumoContextDB';
 import { useLanguage } from '../context/LanguageContext';
 
 export function StatisticsPage() {
-  const { state } = useSumo();
+  const { state } = useSumoDB();
   const { t } = useLanguage();
 
   const calculateStats = () => {
@@ -106,7 +105,7 @@ export function StatisticsPage() {
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <BarChart3 className="h-8 w-8 text-red-600" />
+                <BarChart3 className="h-8 w-8 text-jpblue-600" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
@@ -157,7 +156,7 @@ export function StatisticsPage() {
                 {stats.topRikishi.map((rikishi, index) => (
                   <div key={rikishi.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                      <div className="flex-shrink-0 w-8 h-8 bg-jpblue-600 rounded-full flex items-center justify-center">
                         <span className="text-xs font-medium text-white">{index + 1}</span>
                       </div>
                       <div className="ml-3">

@@ -187,8 +187,8 @@ export function ShikonasPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container mx-auto px-3 py-5">
+      <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
           <Users className="h-8 w-8 text-jpblue-600" />
           <h1 className="text-3xl font-bold text-gray-900">Shikonas</h1>
@@ -196,7 +196,7 @@ export function ShikonasPage() {
         <button
           onClick={handleImportShikonas}
           disabled={isLoading}
-          className="flex items-center gap-2 bg-jpblue-600 text-white px-4 py-2 rounded-lg hover:bg-jpblue-700 disabled:opacity-50"
+          className="flex items-center gap-2 bg-jpblue-600 text-white px-3 py-2 rounded-lg hover:bg-jpblue-700 disabled:opacity-50"
         >
           {isLoading ? (
             <RefreshCw className="h-4 w-4 animate-spin" />
@@ -207,7 +207,7 @@ export function ShikonasPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 mb-5">
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex items-center justify-between">
             <div>
@@ -269,8 +269,8 @@ export function ShikonasPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4 mb-6">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-3">
+        <div className="flex flex-col lg:flex-row gap-3 mb-3">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -287,7 +287,7 @@ export function ShikonasPage() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="all">All Years</option>
             {years.map(year => (
@@ -298,7 +298,7 @@ export function ShikonasPage() {
           <select
             value={selectedNameType}
             onChange={(e) => setSelectedNameType(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="all">All Name Types</option>
             {nameTypes.map(nameType => (
@@ -309,7 +309,7 @@ export function ShikonasPage() {
           <select
             value={selectedOrigin}
             onChange={(e) => setSelectedOrigin(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="all">All Origins</option>
             {origins.map(origin => (
@@ -320,7 +320,7 @@ export function ShikonasPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'name' | 'year' | 'shikonaEn' | 'shikonaJp' | 'nameLength' | 'complexity' | 'popularity' | 'nameHistory')}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jpblue-500 focus:border-jpblue-500"
           >
             <option value="year">Sort by Year</option>
             <option value="name">Sort by Rikishi Name</option>
@@ -337,27 +337,27 @@ export function ShikonasPage() {
           <table className="min-w-full">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-medium text-gray-600">ID</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Rikishi ID</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">English Shikona</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Japanese Shikona</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Basho ID</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Name Type</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Complexity</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Origin</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Popularity</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Season</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">ID</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Rikishi ID</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">English Shikona</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Japanese Shikona</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Basho ID</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Name Type</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Complexity</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Origin</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Popularity</th>
+                <th className="text-left py-3 px-3 font-medium text-gray-600">Season</th>
               </tr>
             </thead>
             <tbody>
               {filteredAndSortedShikonas.map((shikona) => (
                 <tr key={shikona.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="font-mono text-sm text-gray-900">
                       {shikona.id}
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="font-medium text-jpblue-600">
                       {shikona.rikishiId}
                     </div>
@@ -367,7 +367,7 @@ export function ShikonasPage() {
                       </div>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <span className="font-medium text-jpblue-600">
                       {shikona.shikonaEn || '-'}
                     </span>
@@ -377,7 +377,7 @@ export function ShikonasPage() {
                       </div>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="font-medium text-gray-700">
                       {shikona.shikonaJp || '-'}
                     </div>
@@ -392,7 +392,7 @@ export function ShikonasPage() {
                       )}
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="font-mono text-sm text-gray-900">
                       {shikona.bashoId}
                     </div>
@@ -400,33 +400,33 @@ export function ShikonasPage() {
                       {shikona.year}/{String(shikona.month).padStart(2, '0')}
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="flex items-center gap-2">
                       {getNameTypeIcon(shikona.nameType)}
                       <span className="text-sm text-gray-600">{shikona.nameType || 'Unknown'}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     {shikona.nameComplexity && (
                       <span className={`text-xs px-2 py-1 rounded-md font-medium ${getComplexityColor(shikona.nameComplexity)}`}>
                         {shikona.nameComplexity}
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     {shikona.nameOrigin && (
                       <span className={`text-xs px-2 py-1 rounded-md font-medium ${getOriginColor(shikona.nameOrigin)}`}>
                         {shikona.nameOrigin}
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="flex items-center gap-2">
                       {getPopularityIcon(shikona.namePopularity)}
                       <span className="text-xs text-gray-600">{shikona.namePopularity || 'Unknown'}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="flex items-center text-sm text-gray-600">
                       <Calendar className="h-3 w-3 mr-1" />
                       <span>{shikona.seasonName || formatDate(shikona)}</span>
@@ -441,7 +441,7 @@ export function ShikonasPage() {
               ))}
               {filteredAndSortedShikonas.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="py-8 px-4 text-center text-gray-500">
+                  <td colSpan={10} className="py-5 px-3 text-center text-gray-500">
                     {(state.shikonas?.length || 0) === 0 ? 'No shikonas data available. Import shikonas to get started.' : 'No shikonas match your search criteria.'}
                   </td>
                 </tr>

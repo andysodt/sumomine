@@ -92,10 +92,10 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         shikonas: 0,
         banzuke: 0,
         torikumi: 0,
-        errors: ['Import timed out after 2 minutes. Please try again.']
+        errors: ['Import timed out after 1 hour. Please try again.']
       });
       setIsImporting(false);
-    }, 120000); // 2 minutes timeout
+    }, 3600000); // 1 hour timeout
 
     try {
       setImportProgress({ step: 'Connecting to Sumo API...', percentage: 10 });
@@ -113,7 +113,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
       setImportProgress({ step: 'Fetching rikishi from API...', percentage: 20 });
 
       // Get all rikishi
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(importOptions.includeHistoricalData);
 
       if (!allRikishi || allRikishi.length === 0) {
         throw new Error('No rikishi data received from API');
@@ -245,7 +245,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         try {
           // Get active rikishi IDs for measurement import
           const activeRikishi = await SumoApiService.fetchActiveRikishi();
-          const rikishiIds = activeRikishi.slice(0, 20).map(r => r.id); // Limit to 20 for demo
+          const rikishiIds = activeRikishi.map(r => r.id); // Use all active rikishi
           const measurements = await SumoApiService.fetchAllMeasurements(rikishiIds);
           loadMeasurements(measurements);
           measurementsCount = measurements.length;
@@ -261,7 +261,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         try {
           // Get active rikishi IDs for ranks import
           const activeRikishi = await SumoApiService.fetchActiveRikishi();
-          const rikishiIds = activeRikishi.slice(0, 20).map(r => r.id); // Limit to 20 for demo
+          const rikishiIds = activeRikishi.map(r => r.id); // Use all active rikishi
           const ranks = await SumoApiService.fetchAllRanks(rikishiIds);
           loadRanks(ranks);
           ranksCount = ranks.length;
@@ -277,7 +277,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         try {
           // Get active rikishi IDs for shikonas import
           const activeRikishi = await SumoApiService.fetchActiveRikishi();
-          const rikishiIds = activeRikishi.slice(0, 20).map(r => r.id); // Limit to 20 for demo
+          const rikishiIds = activeRikishi.map(r => r.id);
           const shikonas = await SumoApiService.fetchAllShikonas(rikishiIds);
           loadShikonas(shikonas);
           shikonasCount = shikonas.length;
@@ -306,7 +306,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         try {
           // Get recent bashos for torikumi import
           const bashos = await SumoApiService.fetchBashos();
-          const recentBashoIds = bashos.slice(0, 2).map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id)); // Get latest 2 bashos
+          const recentBashoIds = bashos.map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id));
           const torikumi = await SumoApiService.fetchAllTorikumiEntities(recentBashoIds);
           loadTorikumi(torikumi);
           torikumiCount = torikumi.length;
@@ -326,7 +326,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
           const importedRikishiIds = state.rikishi
             .filter(r => r.id.startsWith('sumo-api-'))
             .map(r => parseInt(r.id.replace('sumo-api-', '')))
-            .slice(0, 10); // Limit to 10 rikishi to avoid too many API calls
+;
 
           if (importedRikishiIds.length === 0) {
             console.warn('No imported rikishi found for bout import');
@@ -458,14 +458,14 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
-              <div className="w-16 h-16 bg-jpblue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-jpblue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Database className="h-8 w-8 text-jpblue-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Importing Data</h3>
-              <p className="text-sm text-gray-600 mb-4">{importProgress.step}</p>
+              <p className="text-sm text-gray-600 mb-3">{importProgress.step}</p>
 
               {/* Progress Bar */}
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
                 <div
                   className="bg-jpblue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${importProgress.percentage}%` }}
@@ -535,7 +535,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
         <button
           onClick={handleComprehensiveImport}
           disabled={isImporting || apiSummary?.apiStatus === 'offline'}
-          className="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-jpblue-600 via-jpblue-700 to-jpblue-800 text-white rounded-xl text-sm font-semibold hover:from-jpblue-700 hover:via-jpblue-800 hover:to-jpblue-900 focus:outline-none focus:ring-2 focus:ring-jpblue-500 focus:ring-offset-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:scale-105 disabled:hover:scale-100"
+          className="group relative inline-flex items-center px-3 py-3 bg-gradient-to-r from-jpblue-600 via-jpblue-700 to-jpblue-800 text-white rounded-xl text-sm font-semibold hover:from-jpblue-700 hover:via-jpblue-800 hover:to-jpblue-900 focus:outline-none focus:ring-2 focus:ring-jpblue-500 focus:ring-offset-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:scale-105 disabled:hover:scale-100"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-jpblue-400/20 to-jpblue-600/20 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
           <div className="relative flex items-center">
@@ -592,7 +592,7 @@ export function ComprehensiveImport({ onImportComplete }: ComprehensiveImportPro
           </div>
 
           {/* Import Options */}
-          <div className="p-4 space-y-3">
+          <div className="p-4 space-y-2">
             <div className="space-y-2">
               <label className="flex items-center space-x-2">
                 <input

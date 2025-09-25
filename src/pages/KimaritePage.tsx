@@ -83,7 +83,7 @@ export function KimaritePage() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
+      <div className="mb-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
@@ -107,7 +107,7 @@ export function KimaritePage() {
             <button
               onClick={handleImportKimarite}
               disabled={isLoading}
-              className="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-jpblue-600 to-jpblue-700 hover:from-jpblue-700 hover:to-jpblue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-3 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-jpblue-600 to-jpblue-700 hover:from-jpblue-700 hover:to-jpblue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="-ml-1 mr-2 h-5 w-5" />
               {isLoading ? 'Importing...' : 'Import Kimarite'}
@@ -117,7 +117,7 @@ export function KimaritePage() {
 
         {/* Error Display */}
         {error && (
-          <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div className="flex">
               <AlertCircle className="h-5 w-5 text-yellow-400" />
               <div className="ml-3">
@@ -128,7 +128,7 @@ export function KimaritePage() {
         )}
 
         {/* Filters and Sorting */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -171,7 +171,7 @@ export function KimaritePage() {
 
       {/* Statistics Summary */}
       {state.kimarite.length > 0 && (
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mb-5 grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-600 rounded-lg flex items-center justify-center">
@@ -210,15 +210,15 @@ export function KimaritePage() {
 
       {/* Kimarite Grid */}
       {sortedKimarite.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {sortedKimarite.map((kimarite, index) => (
             <div
               key={kimarite.id}
               className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpblue transition-all duration-300 transform hover:scale-105"
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              <div className="px-6 py-6">
-                <div className="flex items-start justify-between mb-4">
+              <div className="px-3 py-3">
+                <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
@@ -257,7 +257,7 @@ export function KimaritePage() {
                   </div>
                 </div>
 
-                <div className="mt-4 space-y-3">
+                <div className="mt-3 space-y-2">
                   <p className="text-sm text-gray-600 leading-relaxed">
                     {kimarite.description}
                   </p>
@@ -323,7 +323,7 @@ export function KimaritePage() {
                     )}
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <div className="bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
                       <div
                         className="bg-gradient-to-r from-jpblue-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
@@ -352,11 +352,11 @@ export function KimaritePage() {
               : 'Import kimarite data from the Sumo API to get started'}
           </p>
           {!searchTerm && !filterCategory && (
-            <div className="mt-6">
+            <div className="mt-3">
               <button
                 onClick={handleImportKimarite}
                 disabled={isLoading}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 disabled:opacity-50"
+                className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 disabled:opacity-50"
               >
                 <Download className="-ml-1 mr-2 h-5 w-5" />
                 {isLoading ? 'Importing...' : 'Import Kimarite'}

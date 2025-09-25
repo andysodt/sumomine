@@ -67,7 +67,7 @@ export function WrestlersPage() {
 
     try {
       // Fetch all rikishi from the API
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(true);
 
       if (!allRikishi || allRikishi.length === 0) {
         throw new Error('No rikishi data received from API');
@@ -131,7 +131,7 @@ export function WrestlersPage() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
+      <div className="mb-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
@@ -148,7 +148,7 @@ export function WrestlersPage() {
             <button
               onClick={handleImportRikishi}
               disabled={isImporting}
-              className="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="inline-flex items-center px-3 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isImporting ? (
                 <Loader2 className="-ml-1 mr-2 h-5 w-5 animate-spin" />
@@ -159,7 +159,7 @@ export function WrestlersPage() {
             </button>
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-jpblue-600 to-jpblue-700 hover:from-jpblue-700 hover:to-jpblue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
+              className="inline-flex items-center px-3 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-jpblue-600 to-jpblue-700 hover:from-jpblue-700 hover:to-jpblue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
             >
               <Plus className="-ml-1 mr-2 h-5 w-5" />
               {t('addRikishi')}
@@ -169,7 +169,7 @@ export function WrestlersPage() {
 
         {/* Import Stats */}
         {importStats && (
-          <div className="mt-6 bg-green-50 border border-green-200 rounded-md p-4">
+          <div className="mt-3 bg-green-50 border border-green-200 rounded-md p-4">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -195,7 +195,7 @@ export function WrestlersPage() {
         )}
 
         {/* Filters */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -225,15 +225,15 @@ export function WrestlersPage() {
 
       {/* Wrestlers Grid */}
       {filteredRikishi.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredRikishi.map((rikishi, index) => (
             <div
               key={rikishi.id}
               className="group bg-white/80 backdrop-blur-sm overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-jpblue transition-all duration-300 transform hover:scale-105"
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              <div className="px-6 py-6">
-                <div className="flex items-center justify-between mb-4">
+              <div className="px-3 py-3">
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       <div className="w-10 h-10 bg-gradient-to-br from-jpblue-500 to-jpblue-500 rounded-lg flex items-center justify-center shadow-md">
@@ -264,7 +264,7 @@ export function WrestlersPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 space-y-2">
+                <div className="mt-3 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">{t('record')}:</span>
                     <span className="font-medium">
@@ -317,7 +317,7 @@ export function WrestlersPage() {
                   )}
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-3">
                   <div className="bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
                     <div
                       className="bg-gradient-to-r from-jpblue-500 to-jpblue-500 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
@@ -345,10 +345,10 @@ export function WrestlersPage() {
               : t('getStartedRikishi')}
           </p>
           {!searchTerm && !filterRank && (
-            <div className="mt-6">
+            <div className="mt-3">
               <button
                 onClick={() => setShowForm(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500"
+                className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500"
               >
                 <Plus className="-ml-1 mr-2 h-5 w-5" />
                 {t('addRikishi')}

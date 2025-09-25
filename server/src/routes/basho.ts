@@ -34,11 +34,27 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create new basho
+// Create new basho (with upsert logic)
 router.post('/', async (req, res) => {
   try {
     const validatedData = insertBashoSchema.parse(req.body);
-    const result = await db.insert(basho).values(validatedData).returning();
+
+    // Check if basho already exists
+    const existing = await db.select().from(basho).where(eq(basho.id, validatedData.id));
+
+    let result;
+    if (existing.length > 0) {
+      // Update existing basho
+      result = await db
+        .update(basho)
+        .set(validatedData)
+        .where(eq(basho.id, validatedData.id))
+        .returning();
+    } else {
+      // Insert new basho
+      result = await db.insert(basho).values(validatedData).returning();
+    }
+
     res.status(201).json(result[0]);
   } catch (error) {
     if (error instanceof z.ZodError) {

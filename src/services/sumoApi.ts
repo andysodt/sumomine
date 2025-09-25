@@ -90,8 +90,8 @@ export const mapRikishiToRikishi = (rikishi: RikishiData): Rikishi => {
     shikonaJp: rikishi.shikonaJp,
     rank: mapRankToSumoRank(rikishi.currentRank),
     stable: rikishi.heya || 'Unknown',
-    weight: typeof rikishi.weight === 'number' ? rikishi.weight : 0,
-    height: typeof rikishi.height === 'number' ? rikishi.height : 0,
+    weight: typeof rikishi.weight === 'number' ? Math.round(rikishi.weight) : 0,
+    height: typeof rikishi.height === 'number' ? Math.round(rikishi.height) : 0,
     birthDate: rikishi.birthDate || '',
     debut: rikishi.debut || '',
     wins: 0, // API doesn't provide aggregate wins/losses
@@ -380,9 +380,43 @@ export const mapRankToEntity = (rank: RankData, rikishiName?: string, allRanks?:
     let rankNumber: number | undefined;
     let side: 'East' | 'West' | undefined;
 
-    // Extract division (first part)
-    if (parts.length > 0) {
-      division = parts[0];
+    const firstPart = parts[0]?.toLowerCase();
+
+    // Map rank names to their actual divisions
+    if (firstPart) {
+      switch (firstPart) {
+        case 'yokozuna':
+          division = 'Makuuchi';
+          break;
+        case 'ozeki':
+        case 'sekiwake':
+        case 'komusubi':
+        case 'maegashira':
+          division = 'Makuuchi';
+          break;
+        case 'juryo':
+          division = 'Juryo';
+          break;
+        case 'makushita':
+          division = 'Makushita';
+          break;
+        case 'sandanme':
+          division = 'Sandanme';
+          break;
+        case 'jonidan':
+          division = 'Jonidan';
+          break;
+        case 'jonokuchi':
+          division = 'Jonokuchi';
+          break;
+        default:
+          // If it's already a division name, use it directly
+          if (['makuuchi', 'juryo', 'makushita', 'sandanme', 'jonidan', 'jonokuchi'].includes(firstPart)) {
+            division = firstPart.charAt(0).toUpperCase() + firstPart.slice(1);
+          } else {
+            division = parts[0]; // Fallback to original behavior
+          }
+      }
     }
 
     // Extract rank number (if present)
@@ -952,16 +986,25 @@ export const mapTorikumiToEntity = (torikumi: TorikumiData): TorikumiEntity => {
 
 export class SumoApiService {
   // Fetch all rikishi from the API
-  static async fetchRikishi(): Promise<RikishiData[]> {
+  static async fetchRikishi(includeHistorical: boolean = true): Promise<RikishiData[]> {
     try {
       const allRikishi: RikishiData[] = [];
       let skip = 0;
       const limit = 1000; // API's maximum limit per request
       let hasMore = true;
+      let maxIterations = 100; // Safeguard against infinite loops
+      let iterations = 0;
 
-      while (hasMore) {
-        console.log(`Fetching rikishi batch: skip=${skip}, limit=${limit}`);
-        const response = await fetch(getApiUrl(`/rikishis?limit=${limit}&skip=${skip}`));
+      while (hasMore && iterations < maxIterations) {
+        console.log(`🔥 FETCHING RIKISHI BATCH: skip=${skip}, limit=${limit}, iteration=${iterations}`);
+        const intaiParam = includeHistorical ? '&intai=true' : '';
+        const response = await fetch(getApiUrl(`/rikishis?limit=${limit}&skip=${skip}${intaiParam}`), {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -970,22 +1013,31 @@ export class SumoApiService {
         const data: SumoApiResponse<RikishiData> = await response.json();
         const records = data.records || [];
 
+        console.log(`🔥 API RESPONSE: records.length=${records.length}, data.total=${data.total}, skip=${skip}, limit=${limit}`);
+
         if (records.length === 0) {
+          console.log(`🔥 STOPPING: No more records returned`);
           hasMore = false;
         } else {
           allRikishi.push(...records);
           skip += limit;
+          iterations++;
 
           // Check if we've fetched all available records
           if (skip >= data.total) {
+            console.log(`🔥 STOPPING: Reached total records (${skip} >= ${data.total})`);
             hasMore = false;
           }
 
-          console.log(`Fetched ${records.length} rikishi, total so far: ${allRikishi.length}/${data.total}`);
+          console.log(`🔥 FETCHED ${records.length} rikishi, total so far: ${allRikishi.length}/${data.total}, iteration: ${iterations}, skip: ${skip}`);
         }
       }
 
-      console.log(`Successfully fetched all ${allRikishi.length} rikishi from API`);
+      if (iterations >= maxIterations) {
+        console.log(`🔥 STOPPED due to maxIterations limit (${maxIterations}). Fetched ${allRikishi.length} rikishi`);
+      } else {
+        console.log(`🔥 Successfully fetched all ${allRikishi.length} rikishi from API`);
+      }
       return allRikishi;
     } catch (error) {
       console.error('Error fetching rikishi data:', error);
@@ -1133,22 +1185,15 @@ export class SumoApiService {
     const bashos: BashoData[] = [];
 
     try {
-      // First try the bashos endpoint
-      try {
-        const response = await fetch(getApiUrl('/bashos'));
-        if (response.ok) {
-          const data: SumoApiResponse<BashoData> = await response.json();
-          return data.records || [];
-        }
-      } catch (error) {
-        console.log('bashos endpoint not available:', error);
-      }
+      // Construct basho data from individual endpoints (no bulk bashos endpoint available)
+      console.log('Constructing basho data from individual endpoints...');
 
-      // If that fails, try to construct basho data from individual endpoints
-      console.log('Attempting to construct basho data from individual endpoints...');
-
-      // Try some common basho IDs to find valid ones
-      const bashoIds = [700, 701, 702, 703, 704, 705, 710, 720, 730]; // Recent years
+      // Try some recent basho IDs (format: YYYYMM)
+      const bashoIds = [
+        '202409', '202407', '202405', '202403', '202401', // 2024
+        '202311', '202309', '202307', '202305', '202303', // 2023
+        '202211', '202209', '202207' // 2022
+      ];
 
       for (const id of bashoIds) {
         try {
@@ -1246,7 +1291,12 @@ export class SumoApiService {
 
       const data = await response.json();
 
-      // The API returns an object with division data, extract the wrestlers array
+      // The API returns an object with east/west arrays, combine them
+      if (data && data.east && data.west && Array.isArray(data.east) && Array.isArray(data.west)) {
+        return [...data.east, ...data.west];
+      }
+
+      // Fallback: if it's already an array (older format), use it directly
       if (data && Array.isArray(data)) {
         return data;
       }
@@ -1387,10 +1437,8 @@ export class SumoApiService {
       const allMatches: TorikumiData[] = [];
       const seenMatchIds = new Set<string>();
 
-      // Fetch matches for each rikishi (limited to avoid overwhelming the API)
-      const limitedRikishiIds = rikishiIds.slice(0, 10); // Limit to first 10 rikishi to avoid too many API calls
-
-      for (const rikishiId of limitedRikishiIds) {
+      // Fetch matches for each rikishi
+      for (const rikishiId of rikishiIds) {
         try {
           const matches = await this.fetchRikishiMatches(rikishiId);
 
@@ -1586,7 +1634,21 @@ export class SumoApiService {
     const allMeasurementData: MeasurementData[] = [];
     const errors: string[] = [];
 
-    // First, collect all measurement data
+    // First, fetch rikishi data to get names
+    const rikishiMap = new Map<number, string>();
+    for (const rikishiId of rikishiIds) {
+      try {
+        const rikishiData = await this.fetchRikishiById(rikishiId);
+        if (rikishiData) {
+          rikishiMap.set(rikishiId, rikishiData.shikonaEn || `Rikishi ${rikishiId}`);
+        }
+      } catch (error) {
+        console.warn(`Failed to fetch rikishi data for ${rikishiId}, using fallback name`);
+        rikishiMap.set(rikishiId, `Rikishi ${rikishiId}`);
+      }
+    }
+
+    // Then, collect all measurement data
     for (const rikishiId of rikishiIds) {
       try {
         const measurements = await this.fetchMeasurements(rikishiId);
@@ -1598,11 +1660,12 @@ export class SumoApiService {
       }
     }
 
-    // Then convert all measurements to entities with full dataset for calculations
+    // Finally, convert all measurements to entities with full dataset for calculations
     const allMeasurements: MeasurementEntity[] = [];
     allMeasurementData.forEach(measurement => {
       try {
-        const entity = mapMeasurementToEntity(measurement, undefined, allMeasurementData);
+        const rikishiName = rikishiMap.get(measurement.rikishiId);
+        const entity = mapMeasurementToEntity(measurement, rikishiName, allMeasurementData);
         allMeasurements.push(entity);
       } catch (error) {
         errors.push(`Failed to convert measurement ${measurement.id}: ${error instanceof Error ? error.message : 'Unknown error'}`);

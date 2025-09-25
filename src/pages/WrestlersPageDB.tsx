@@ -77,7 +77,7 @@ export function WrestlersPageDB() {
 
     try {
       // Fetch all rikishi from the API
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(true);
 
       if (!allRikishi || allRikishi.length === 0) {
         throw new Error('No rikishi data received from API');
@@ -125,7 +125,7 @@ export function WrestlersPageDB() {
     return (
       <div className="animate-fade-in flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-jpblue-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-jpblue-600" />
           <p className="text-gray-600">Loading rikishi data...</p>
         </div>
       </div>
@@ -136,7 +136,7 @@ export function WrestlersPageDB() {
   if (state.error) {
     return (
       <div className="animate-fade-in">
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-3">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -158,7 +158,7 @@ export function WrestlersPageDB() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
+      <div className="mb-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg animate-pulse-slow">
@@ -175,7 +175,7 @@ export function WrestlersPageDB() {
             <button
               onClick={handleImportRikishi}
               disabled={isImporting}
-              className="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="inline-flex items-center px-3 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isImporting ? (
                 <Loader2 className="-ml-1 mr-2 h-5 w-5 animate-spin" />
@@ -186,7 +186,7 @@ export function WrestlersPageDB() {
             </button>
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-jpblue-600 to-jpblue-700 hover:from-jpblue-700 hover:to-jpblue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
+              className="inline-flex items-center px-3 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white bg-gradient-to-r from-jpblue-600 to-jpblue-700 hover:from-jpblue-700 hover:to-jpblue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
             >
               <Plus className="-ml-1 mr-2 h-5 w-5" />
               {t('addRikishi')}
@@ -196,7 +196,7 @@ export function WrestlersPageDB() {
 
         {/* Import Stats */}
         {importStats && (
-          <div className="mt-6 bg-green-50 border border-green-200 rounded-md p-4">
+          <div className="mt-3 bg-green-50 border border-green-200 rounded-md p-4">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -222,7 +222,7 @@ export function WrestlersPageDB() {
         )}
 
         {/* Filters */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -256,7 +256,7 @@ export function WrestlersPageDB() {
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
         <ul className="divide-y divide-gray-200">
           {filteredRikishi.map((rikishi) => (
-            <li key={rikishi.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+            <li key={rikishi.id} className="px-3 py-3 hover:bg-gray-50 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-4">

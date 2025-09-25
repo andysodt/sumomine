@@ -52,7 +52,7 @@ export function StatisticsPage() {
 
   return (
     <div>
-      <div className="mb-8">
+      <div className="mb-5">
         <h1 className="text-3xl font-bold text-gray-900">{t('statisticsPageTitle')}</h1>
         <p className="mt-2 text-gray-600">
           {t('statisticsPageDescription')}
@@ -60,7 +60,7 @@ export function StatisticsPage() {
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-5">
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -144,15 +144,15 @@ export function StatisticsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Top Rikishi */}
         <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+          <div className="px-3 py-5 sm:p-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-3">
               {t('topPerformingRikishi')}
             </h3>
             {stats.topRikishi.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {stats.topRikishi.map((rikishi, index) => (
                   <div key={rikishi.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
@@ -172,19 +172,19 @@ export function StatisticsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-4">{t('noRikishiData')}</p>
+              <p className="text-gray-500 text-center py-3">{t('noRikishiData')}</p>
             )}
           </div>
         </div>
 
         {/* Top Kimarite */}
         <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+          <div className="px-3 py-5 sm:p-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-3">
               {t('mostCommonWinningTechniques')}
             </h3>
             {stats.topKimarite.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {stats.topKimarite.map(([kimarite, count], index) => (
                   <div key={kimarite} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
@@ -205,7 +205,7 @@ export function StatisticsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-4">{t('noMatchData')}</p>
+              <p className="text-gray-500 text-center py-3">{t('noMatchData')}</p>
             )}
           </div>
         </div>

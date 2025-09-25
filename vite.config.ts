@@ -8,14 +8,11 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api/sumo': {
-        target: 'http://localhost:8000',
+        target: 'https://sumo-api.com',
         changeOrigin: true,
         rewrite: (path) => {
-          // Map API endpoints to our mock data file
-          if (path.includes('/rikishis')) {
-            return '/mock-sumo-data.json';
-          }
-          return path.replace(/^\/api\/sumo/, '');
+          // Route to real sumo API - keep /api prefix
+          return path.replace(/^\/api\/sumo/, '/api');
         }
       },
       '/api': {

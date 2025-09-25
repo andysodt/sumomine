@@ -161,7 +161,18 @@ interface SumoContextType {
   addBasho: (basho: Omit<Basho, 'createdAt'>) => Promise<void>;
   updateBasho: (basho: Basho) => Promise<void>;
   deleteBasho: (id: string) => Promise<void>;
-  // Local-only methods (keeping existing functionality)
+  // Database methods for all entities
+  loadMeasurements: () => Promise<void>;
+  bulkAddMeasurements: (measurements: Omit<MeasurementEntity, 'createdAt'>[]) => Promise<void>;
+  loadRanks: () => Promise<void>;
+  bulkAddRanks: (ranks: Omit<RankEntity, 'createdAt'>[]) => Promise<void>;
+  loadShikonas: () => Promise<void>;
+  bulkAddShikonas: (shikonas: Omit<ShikonaEntity, 'createdAt'>[]) => Promise<void>;
+  loadBanzuke: () => Promise<void>;
+  bulkAddBanzuke: (banzuke: Omit<BanzukeEntity, 'createdAt'>[]) => Promise<void>;
+  loadTorikumi: () => Promise<void>;
+  bulkAddTorikumi: (torikumi: Omit<TorikumiEntity, 'createdAt'>[]) => Promise<void>;
+  // Local-only methods (keeping existing functionality for bouts and kimarite)
   addBout: (bout: Bout) => void;
   updateBout: (bout: Bout) => void;
   deleteBout: (id: string) => void;
@@ -170,23 +181,12 @@ interface SumoContextType {
   updateKimarite: (kimarite: KimariiteEntity) => void;
   deleteKimarite: (id: string) => void;
   loadKimarite: (kimarite: KimariiteEntity[]) => void;
-  loadMeasurements: (measurements: MeasurementEntity[]) => void;
-  loadRanks: (ranks: RankEntity[]) => void;
-  loadShikonas: (shikonas: ShikonaEntity[]) => void;
-  loadBanzuke: (banzuke: BanzukeEntity[]) => void;
-  loadTorikumi: (torikumi: TorikumiEntity[]) => void;
 }
 
 const SumoContext = createContext<SumoContextType | undefined>(undefined);
 
 export function SumoProviderDB({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(sumoReducer, initialState);
-
-  // Load initial data on mount
-  useEffect(() => {
-    loadRikishi();
-    loadBashos();
-  }, []);
 
   // Rikishi methods
   const loadRikishi = async () => {
@@ -285,7 +285,103 @@ export function SumoProviderDB({ children }: { children: ReactNode }) {
     }
   };
 
-  // Local-only methods (keeping existing functionality for now)
+  // Database methods for all entities
+  const loadMeasurements = async () => {
+    try {
+      const measurements = await apiService.getAllMeasurements();
+      dispatch({ type: 'LOAD_MEASUREMENTS', payload: measurements });
+    } catch (error) {
+      console.error('Failed to load measurements:', error);
+    }
+  };
+
+  const bulkAddMeasurements = async (measurements: Omit<MeasurementEntity, 'createdAt'>[]) => {
+    try {
+      await apiService.bulkCreateMeasurements(measurements);
+      await loadMeasurements();
+    } catch (error) {
+      console.error('Failed to bulk add measurements:', error);
+      throw error;
+    }
+  };
+
+  const loadRanks = async () => {
+    try {
+      const ranks = await apiService.getAllRanks();
+      dispatch({ type: 'LOAD_RANKS', payload: ranks });
+    } catch (error) {
+      console.error('Failed to load ranks:', error);
+    }
+  };
+
+  const bulkAddRanks = async (ranks: Omit<RankEntity, 'createdAt'>[]) => {
+    try {
+      await apiService.bulkCreateRanks(ranks);
+      await loadRanks();
+    } catch (error) {
+      console.error('Failed to bulk add ranks:', error);
+      throw error;
+    }
+  };
+
+  const loadShikonas = async () => {
+    try {
+      const shikonas = await apiService.getAllShikonas();
+      dispatch({ type: 'LOAD_SHIKONAS', payload: shikonas });
+    } catch (error) {
+      console.error('Failed to load shikonas:', error);
+    }
+  };
+
+  const bulkAddShikonas = async (shikonas: Omit<ShikonaEntity, 'createdAt'>[]) => {
+    try {
+      await apiService.bulkCreateShikonas(shikonas);
+      await loadShikonas();
+    } catch (error) {
+      console.error('Failed to bulk add shikonas:', error);
+      throw error;
+    }
+  };
+
+  const loadBanzuke = async () => {
+    try {
+      const banzuke = await apiService.getAllBanzuke();
+      dispatch({ type: 'LOAD_BANZUKE', payload: banzuke });
+    } catch (error) {
+      console.error('Failed to load banzuke:', error);
+    }
+  };
+
+  const bulkAddBanzuke = async (banzuke: Omit<BanzukeEntity, 'createdAt'>[]) => {
+    try {
+      await apiService.bulkCreateBanzuke(banzuke);
+      await loadBanzuke();
+    } catch (error) {
+      console.error('Failed to bulk add banzuke:', error);
+      throw error;
+    }
+  };
+
+  const loadTorikumi = async () => {
+    try {
+      const torikumi = await apiService.getAllTorikumi();
+      dispatch({ type: 'LOAD_TORIKUMI', payload: torikumi });
+    } catch (error) {
+      console.error('Failed to load torikumi:', error);
+    }
+  };
+
+  const bulkAddTorikumi = async (torikumi: Omit<TorikumiEntity, 'createdAt'>[]) => {
+    try {
+      await apiService.bulkCreateTorikumi(torikumi);
+      await loadTorikumi();
+    } catch (error) {
+      console.error('Failed to bulk add torikumi:', error);
+      throw error;
+    }
+  };
+
+  // Local-only methods (keeping existing functionality for bouts and kimarite for now)
   const addBout = (bout: Bout) => {
     dispatch({ type: 'ADD_BOUT', payload: bout });
   };
@@ -318,25 +414,16 @@ export function SumoProviderDB({ children }: { children: ReactNode }) {
     dispatch({ type: 'LOAD_KIMARITE', payload: kimarite });
   };
 
-  const loadMeasurements = (measurements: MeasurementEntity[]) => {
-    dispatch({ type: 'LOAD_MEASUREMENTS', payload: measurements });
-  };
-
-  const loadRanks = (ranks: RankEntity[]) => {
-    dispatch({ type: 'LOAD_RANKS', payload: ranks });
-  };
-
-  const loadShikonas = (shikonas: ShikonaEntity[]) => {
-    dispatch({ type: 'LOAD_SHIKONAS', payload: shikonas });
-  };
-
-  const loadBanzuke = (banzuke: BanzukeEntity[]) => {
-    dispatch({ type: 'LOAD_BANZUKE', payload: banzuke });
-  };
-
-  const loadTorikumi = (torikumi: TorikumiEntity[]) => {
-    dispatch({ type: 'LOAD_TORIKUMI', payload: torikumi });
-  };
+  // Load initial data on mount
+  useEffect(() => {
+    loadRikishi();
+    loadBashos();
+    loadMeasurements();
+    loadRanks();
+    loadShikonas();
+    loadBanzuke();
+    loadTorikumi();
+  }, []);
 
   const value: SumoContextType = {
     state,
@@ -350,6 +437,16 @@ export function SumoProviderDB({ children }: { children: ReactNode }) {
     addBasho,
     updateBasho,
     deleteBasho,
+    loadMeasurements,
+    bulkAddMeasurements,
+    loadRanks,
+    bulkAddRanks,
+    loadShikonas,
+    bulkAddShikonas,
+    loadBanzuke,
+    bulkAddBanzuke,
+    loadTorikumi,
+    bulkAddTorikumi,
     addBout,
     updateBout,
     deleteBout,
@@ -358,11 +455,6 @@ export function SumoProviderDB({ children }: { children: ReactNode }) {
     updateKimarite,
     deleteKimarite,
     loadKimarite,
-    loadMeasurements,
-    loadRanks,
-    loadShikonas,
-    loadBanzuke,
-    loadTorikumi,
   };
 
   return <SumoContext.Provider value={value}>{children}</SumoContext.Provider>;

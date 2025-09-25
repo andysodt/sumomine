@@ -49,8 +49,8 @@ export function Dashboard() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+      <div className="mb-5">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-to-br from-jpblue-600 to-jpblue-800 rounded-xl flex items-center justify-center shadow-jpblue animate-pulse-slow">
               <span className="text-white font-bold text-2xl">相</span>
@@ -70,27 +70,27 @@ export function Dashboard() {
         </div>
 
         {/* Mobile Comprehensive Import Button */}
-        <div className="md:hidden mb-4">
+        <div className="md:hidden mb-3">
           <ComprehensiveImport />
         </div>
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-5">
         {stats.map((stat, index) => (
           <Link
             key={stat.name}
             to={stat.href}
-            className="group relative bg-white/80 backdrop-blur-sm pt-5 px-4 pb-12 sm:pt-6 sm:px-6 shadow-lg rounded-xl overflow-hidden hover:shadow-jpblue transition-all duration-300 transform hover:scale-105 border border-gray-100"
+            className="group relative bg-white/80 backdrop-blur-sm pt-3 px-3 pb-8 sm:pt-4 sm:px-3 shadow-lg rounded-xl overflow-hidden hover:shadow-jpblue transition-all duration-300 transform hover:scale-105 border border-gray-100"
             style={{ animationDelay: `${index * 100}ms` }}
           >
             <dt>
-              <div className={`absolute ${stat.color} rounded-xl p-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+              <div className={`absolute ${stat.color} rounded-xl p-2 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                 <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
               <p className="ml-16 text-sm font-medium text-gray-500 truncate group-hover:text-gray-700 transition-colors">{stat.name}</p>
             </dt>
-            <dd className="ml-16 pb-6 flex items-baseline sm:pb-7">
+            <dd className="ml-16 pb-4 flex items-baseline sm:pb-5">
               <p className="text-2xl font-bold text-gray-900 group-hover:text-jpblue-700 transition-colors">{stat.value}</p>
             </dd>
             <div className="absolute inset-0 bg-gradient-to-r from-jpblue-50/0 to-jpblue-100/0 group-hover:from-jpblue-50/20 group-hover:to-jpblue-100/20 transition-all duration-300"></div>
@@ -98,11 +98,11 @@ export function Dashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Recent Matches */}
         <div className="bg-white/80 backdrop-blur-sm shadow-lg rounded-xl border border-gray-100 overflow-hidden">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
+          <div className="px-3 py-3 sm:p-2">
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-jpblue-500 to-jpblue-700 rounded-lg flex items-center justify-center">
                   <Swords className="h-5 w-5 text-white" />
@@ -117,14 +117,14 @@ export function Dashboard() {
               </Link>
             </div>
             {recentBouts.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {recentBouts.map((bout) => {
                   const rikishi1 = state.rikishi.find(r => r.id === bout.rikishi1Id);
                   const rikishi2 = state.rikishi.find(r => r.id === bout.rikishi2Id);
                   const winner = state.rikishi.find(r => r.id === bout.winnerId);
 
                   return (
-                    <div key={bout.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-jpblue-50 to-jpblue-100 rounded-xl hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-jpblue-200">
+                    <div key={bout.id} className="flex items-center justify-between p-2 bg-gradient-to-r from-jpblue-50 to-jpblue-100 rounded-xl hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-jpblue-200">
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-gray-900">
                           {rikishi1?.name} <span className="text-jpblue-500 font-normal">{t('vs')}</span> {rikishi2?.name}
@@ -149,14 +149,14 @@ export function Dashboard() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-6">
+              <div className="text-center py-4">
                 <Swords className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">{t('noBoutsYet')}</h3>
                 <p className="mt-1 text-sm text-gray-500">{t('getStartedBouts')}</p>
-                <div className="mt-6">
+                <div className="mt-4">
                   <Link
                     to="/bouts"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700"
+                    className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700"
                   >
                     <Plus className="-ml-1 mr-2 h-5 w-5" />
                     {t('newBout')}
@@ -169,8 +169,8 @@ export function Dashboard() {
 
         {/* Top Rikishi */}
         <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
+          <div className="px-3 py-3 sm:p-2">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg leading-6 font-medium text-gray-900">{t('topRikishi')}</h3>
               <Link
                 to="/rikishi"
@@ -180,14 +180,14 @@ export function Dashboard() {
               </Link>
             </div>
             {topRikishi.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {topRikishi.map((rikishi, index) => {
                   const winRate = rikishi.wins + rikishi.losses > 0
                     ? ((rikishi.wins / (rikishi.wins + rikishi.losses)) * 100).toFixed(1)
                     : '0.0';
 
                   return (
-                    <div key={rikishi.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={rikishi.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 w-8 h-8 bg-jpblue-600 rounded-full flex items-center justify-center">
                           <span className="text-xs font-medium text-white">{index + 1}</span>
@@ -206,31 +206,31 @@ export function Dashboard() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-jpblue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="text-center py-3">
+                <div className="w-16 h-16 bg-jpblue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Users className="h-8 w-8 text-jpblue-600" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">{t('noRikishiYet')}</h3>
-                <p className="text-sm text-gray-500 mb-6 max-w-md mx-auto">{t('getStartedRikishi')}</p>
+                <p className="text-sm text-gray-500 mb-3 max-w-md mx-auto">{t('getStartedRikishi')}</p>
 
                 {/* Featured Import Option */}
-                <div className="bg-gradient-to-br from-jpblue-50 to-jpblue-100 rounded-xl p-6 mb-6 max-w-md mx-auto border border-jpblue-200">
+                <div className="bg-gradient-to-br from-jpblue-50 to-jpblue-100 rounded-xl p-2 mb-3 max-w-md mx-auto border border-jpblue-200">
                   <div className="flex items-center justify-center mb-3">
                     <Database className="h-6 w-6 text-jpblue-600 mr-2" />
                     <span className="text-sm font-medium text-jpblue-900">Quick Start</span>
                   </div>
-                  <p className="text-xs text-jpblue-700 mb-4 text-center">
+                  <p className="text-xs text-jpblue-700 mb-3 text-center">
                     Import all 9,101 rikishi (active & historical) from the official Sumo API
                   </p>
                   <ComprehensiveImport />
                 </div>
 
                 {/* Alternative Options */}
-                <div className="text-sm text-gray-500 mb-4">Or manually add rikishi:</div>
+                <div className="text-sm text-gray-500 mb-3">Or manually add rikishi:</div>
                 <div className="flex items-center justify-center">
                   <Link
                     to="/rikishi"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700"
+                    className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-jpblue-600 hover:bg-jpblue-700"
                   >
                     <Plus className="-ml-1 mr-2 h-5 w-5" />
                     {t('addRikishi')}

@@ -68,7 +68,7 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50 backdrop-blur-sm animate-fade-in">
       <div className="relative top-10 mx-auto p-6 border w-full max-w-2xl shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border-gray-200 animate-slide-in">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-jpblue-600 to-jpblue-600 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">相</span>
@@ -85,8 +85,8 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 {t('name')}
@@ -340,17 +340,17 @@ export function WrestlerForm({ wrestler, onSubmit, onCancel }: RikishiFormProps)
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+          <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200"
             >
               {t('cancel')}
             </button>
             <button
               type="submit"
-              className="px-6 py-2 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-gradient-to-r from-jpblue-600 to-jpblue-600 hover:from-jpblue-700 hover:to-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
+              className="px-3 py-2 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-gradient-to-r from-jpblue-600 to-jpblue-600 hover:from-jpblue-700 hover:to-jpblue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jpblue-500 transition-all duration-200 transform hover:scale-105"
             >
               {wrestler ? t('updateRikishi') : t('createRikishi')}
             </button>

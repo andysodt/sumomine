@@ -12,6 +12,7 @@ import { RanksPage } from './pages/RanksPage';
 import { ShikonasPage } from './pages/ShikonasPage';
 import { BanzukePage } from './pages/BanzukePage';
 import { TorikumiPage } from './pages/TorikumiPage';
+import { RankProgressionPage } from './pages/RankProgressionPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/shikonas" element={<ShikonasPage />} />
             <Route path="/banzuke" element={<BanzukePage />} />
             <Route path="/torikumi" element={<TorikumiPage />} />
+            <Route path="/rank-progression" element={<RankProgressionPage />} />
             <Route path="/statistics" element={<StatisticsPage />} />
           </Routes>
         </Layout>

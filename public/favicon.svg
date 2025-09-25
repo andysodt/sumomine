@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Kokugikan Tower Favicon - Optimized for small sizes -->
+  <g fill="#000000">
+    <!-- Main tower structure -->
+    <rect x="12" y="8" width="8" height="18" />
+
+    <!-- Tower base/foundation -->
+    <rect x="10.5" y="25" width="11" height="2" />
+
+    <!-- Traditional Japanese roof structure -->
+    <polygon points="9,8 16,4 23,8 21,8 16,5.5 11,8" />
+
+    <!-- Roof details -->
+    <rect x="11" y="7.5" width="10" height="1" />
+    <rect x="10" y="8.5" width="12" height="0.5" />
+
+    <!-- Tower segments/floors -->
+    <rect x="11.5" y="12" width="9" height="0.5" />
+    <rect x="11.5" y="16" width="9" height="0.5" />
+    <rect x="11.5" y="20" width="9" height="0.5" />
+
+    <!-- Side architectural details -->
+    <rect x="10" y="10.5" width="1" height="14.5" />
+    <rect x="21" y="10.5" width="1" height="14.5" />
+
+    <!-- Windows/openings -->
+    <rect x="12.5" y="10" width="1.5" height="1" fill="#ffffff" />
+    <rect x="18" y="10" width="1.5" height="1" fill="#ffffff" />
+    <rect x="12.5" y="13.5" width="1.5" height="1.5" fill="#ffffff" />
+    <rect x="18" y="13.5" width="1.5" height="1.5" fill="#ffffff" />
+    <rect x="12.5" y="17.5" width="1.5" height="1.5" fill="#ffffff" />
+    <rect x="18" y="17.5" width="1.5" height="1.5" fill="#ffffff" />
+    <rect x="12.5" y="21.5" width="1.5" height="1.5" fill="#ffffff" />
+    <rect x="18" y="21.5" width="1.5" height="1.5" fill="#ffffff" />
+
+    <!-- Central tower peak -->
+    <polygon points="15.5,4 16.5,4 16,2.5" />
+
+    <!-- Additional roof elements -->
+    <rect x="13.5" y="5.5" width="5" height="1.5" />
+    <rect x="14" y="5" width="4" height="0.5" />
+  </g>
+</svg>

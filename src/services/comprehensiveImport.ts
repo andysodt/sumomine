@@ -152,7 +152,7 @@ export class ComprehensiveImportService {
 
     try {
       // Get all rikishi
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(true);
 
       // Filter based on options
       const rikishiToImport = includeInactive
@@ -370,7 +370,7 @@ export class ComprehensiveImportService {
       console.log('Attempting to import measurements data from Sumo API...');
 
       // Get all rikishi first to fetch measurements for each
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(true);
       console.log(`Found ${allRikishi.length} rikishi to fetch measurements for`);
 
       if (allRikishi.length === 0) {
@@ -379,11 +379,10 @@ export class ComprehensiveImportService {
         return { count, errors };
       }
 
-      // Limit to first 10 rikishi for demo purposes to avoid overwhelming the API
-      const rikishiToProcess = allRikishi.slice(0, 10);
-      const rikishiIds = rikishiToProcess.map(r => r.id);
+      // Process all rikishi for complete dataset
+      const rikishiIds = allRikishi.map(r => r.id);
 
-      console.log(`Fetching measurements for ${rikishiIds.length} rikishi: ${rikishiIds.join(', ')}`);
+      console.log(`Fetching measurements for ${rikishiIds.length} rikishi`);
 
       // Fetch measurements for all rikishi
       const measurements = await SumoApiService.fetchAllMeasurements(rikishiIds);
@@ -418,7 +417,7 @@ export class ComprehensiveImportService {
       console.log('Attempting to import ranks data from Sumo API...');
 
       // Get all rikishi first to fetch ranks for each
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(true);
       console.log(`Found ${allRikishi.length} rikishi to fetch ranks for`);
 
       if (allRikishi.length === 0) {
@@ -427,11 +426,10 @@ export class ComprehensiveImportService {
         return { count, errors };
       }
 
-      // Limit to first 5 rikishi for demo purposes to avoid overwhelming the API
-      const rikishiToProcess = allRikishi.slice(0, 5);
-      const rikishiIds = rikishiToProcess.map(r => r.id);
+      // Process all rikishi for complete dataset
+      const rikishiIds = allRikishi.map(r => r.id);
 
-      console.log(`Fetching ranks for ${rikishiIds.length} rikishi: ${rikishiIds.join(', ')}`);
+      console.log(`Fetching ranks for ${rikishiIds.length} rikishi`);
 
       // Fetch ranks for all rikishi
       const ranks = await SumoApiService.fetchAllRanks(rikishiIds);
@@ -466,7 +464,7 @@ export class ComprehensiveImportService {
       console.log('Attempting to import shikonas data from Sumo API...');
 
       // Get all rikishi first to fetch shikonas for each
-      const allRikishi = await SumoApiService.fetchRikishi();
+      const allRikishi = await SumoApiService.fetchRikishi(true);
       console.log(`Found ${allRikishi.length} rikishi to fetch shikonas for`);
 
       if (allRikishi.length === 0) {
@@ -475,11 +473,10 @@ export class ComprehensiveImportService {
         return { count, errors };
       }
 
-      // Limit to first 10 rikishi for demo purposes to avoid overwhelming the API
-      const rikishiToProcess = allRikishi.slice(0, 10);
-      const rikishiIds = rikishiToProcess.map(r => r.id);
+      // Process all rikishi for complete dataset
+      const rikishiIds = allRikishi.map(r => r.id);
 
-      console.log(`Fetching shikonas for ${rikishiIds.length} rikishi: ${rikishiIds.join(', ')}`);
+      console.log(`Fetching shikonas for ${rikishiIds.length} rikishi`);
 
       // Fetch shikonas for all rikishi
       const shikonas = await SumoApiService.fetchAllShikonas(rikishiIds);
@@ -547,7 +544,7 @@ export class ComprehensiveImportService {
 
       // Try to get recent basho IDs for torikumi import
       const bashos = await SumoApiService.fetchBashos();
-      const recentBashoIds = bashos.slice(0, 3).map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id)); // Get latest 3 bashos
+      const recentBashoIds = bashos.map(b => typeof b.id === 'string' ? parseInt(b.id) : b.id).filter(id => !isNaN(id));
 
       if (recentBashoIds.length > 0) {
         console.log(`Fetching torikumi for ${recentBashoIds.length} recent bashos: ${recentBashoIds.join(', ')}`);

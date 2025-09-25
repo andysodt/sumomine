@@ -5,6 +5,11 @@ import compression from 'compression';
 import dotenv from 'dotenv';
 import rikishiRoutes from './routes/rikishi.js';
 import bashoRoutes from './routes/basho.js';
+import measurementsRoutes from './routes/measurements.js';
+import ranksRoutes from './routes/ranks.js';
+import shikonasRoutes from './routes/shikonas.js';
+import banzukeRoutes from './routes/banzuke.js';
+import torikumiRoutes from './routes/torikumi.js';
 
 dotenv.config();
 
@@ -29,6 +34,11 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/rikishi', rikishiRoutes);
 app.use('/api/basho', bashoRoutes);
+app.use('/api/measurements', measurementsRoutes);
+app.use('/api/ranks', ranksRoutes);
+app.use('/api/shikonas', shikonasRoutes);
+app.use('/api/banzuke', banzukeRoutes);
+app.use('/api/torikumi', torikumiRoutes);
 
 // Error handling middleware
 app.use((err: any, req: any, res: any, next: any) => {

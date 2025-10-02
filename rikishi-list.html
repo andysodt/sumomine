@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rikishi List - SumoMine</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="top-header">
+        <div class="header-content">
+            <img src="logo.svg" alt="SumoMine Logo" class="header-logo">
+            <div class="header-text">
+                <h1>SumoMine</h1>
+        <p>Sumo Statistics Tracker</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="/#overview">Overview</a></li>
+                    <li><a href="/rikishi-list.html" class="active">Rikishi</a></li>
+                    <li><a href="/basho-list.html">Basho</a></li>
+                    <li><a href="/banzuke-list.html">Banzuke</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="container">
+                <section class="rikishi-page">
+                    <h2>Rikishi</h2>
+                    <div class="search-filters">
+                        <input type="text" id="search-input" placeholder="Search by name...">
+                        <select id="heya-filter">
+                            <option value="">All Heya</option>
+                        </select>
+                        <select id="division-filter">
+                            <option value="">All Divisions</option>
+                            <option value="Makuuchi">Makuuchi</option>
+                            <option value="Juryo">Juryo</option>
+                            <option value="Makushita">Makushita</option>
+                            <option value="Sandanme">Sandanme</option>
+                            <option value="Jonidan">Jonidan</option>
+                            <option value="Jonokuchi">Jonokuchi</option>
+                        </select>
+                        <input type="text" id="rank-filter" placeholder="Filter by rank...">
+                        <button id="search-btn">Search</button>
+                        <button id="clear-btn">Clear</button>
+                    </div>
+                    <div id="rikishis-list"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="rikishi-list.js"></script>
+</body>
+</html>

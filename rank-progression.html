@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank Progression - SumoMine</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="top-header">
+        <div class="header-content">
+            <img src="logo.svg" alt="SumoMine Logo" class="header-logo">
+            <div class="header-text">
+                <h1>SumoMine</h1>
+                <p>Sumo Statistics Tracker</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="/rikishi-list.html">Rikishi</a></li>
+                    <li><a href="/basho-list.html">Basho</a></li>
+                    <li><a href="/banzuke-list.html">Banzuke</a></li>
+                    <li><a href="/rank-progression.html" class="active">Rank Progression</a></li>
+                    <li><a href="/measurement-progression.html">Measurement Progression</a></li>
+                    <li><a href="/kimarite-progression.html">Kimarite Progression</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="container">
+                <h2>Rank Progression</h2>
+
+                <div class="rank-progression-controls">
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label for="rikishi-dropdown">Quick Select Rikishi (hold Ctrl/Cmd to select multiple):</label>
+                            <select id="rikishi-dropdown" multiple size="8">
+                            </select>
+                            <button id="add-selected-btn" class="add-btn">Add Selected</button>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="rikishi-search">Search Rikishi:</label>
+                            <input type="text" id="rikishi-search" placeholder="Type to search...">
+                            <div id="search-results" class="search-dropdown"></div>
+                        </div>
+                    </div>
+
+                    <div class="selected-rikishi">
+                        <h3>Selected Rikishi:</h3>
+                        <div id="selected-list" class="selected-list"></div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="rankChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="rank-progression.js"></script>
+</body>
+</html>

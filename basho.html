@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basho Details - SumoMine</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="top-header">
+        <div class="header-content">
+            <img src="logo.svg" alt="SumoMine Logo" class="header-logo">
+            <div class="header-text">
+                <h1>SumoMine</h1>
+        <p>Sumo Statistics Tracker</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="/#overview">Overview</a></li>
+                    <li><a href="/rikishi-list.html">Rikishi</a></li>
+                    <li><a href="/basho-list.html">Basho</a></li>
+                    <li><a href="/banzuke-list.html">Banzuke</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="container">
+                <section class="basho-details">
+                    <button id="back-to-list" class="back-button" onclick="window.location.href='/basho-list.html'">← Back to List</button>
+                    <div id="basho-details-content"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="basho-details.js"></script>
+</body>
+</html>

@@ -537,55 +537,55 @@ button:hover {
 }
 
 .bout-list {
-    margin-top: 18px;
+    margin-top: 12px;
 }
 
 .bout-item {
     background: var(--white);
     border: 1px solid var(--gray-border);
-    border-radius: 5px;
-    padding: 12px;
-    margin-bottom: 9px;
+    border-radius: 3px;
+    padding: 8px;
+    margin-bottom: 6px;
     transition: box-shadow 0.3s ease;
 }
 
 .bout-item:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bout-status-dot {
     display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    margin-right: 6px;
+    margin-right: 4px;
     vertical-align: middle;
 }
 
 .bout-status-dot.win {
     background-color: white;
-    border: 1.2px solid var(--black);
+    border: 1px solid var(--black);
 }
 
 .bout-status-dot.loss {
     background-color: var(--black);
-    border: 1.2px solid var(--black);
+    border: 1px solid var(--black);
 }
 
 .bout-status-dot.not-played {
     background-color: transparent;
-    border: 1.2px solid var(--gray-border);
+    border: 1px solid var(--gray-border);
 }
 
 .bout-status-dot.completed {
     background-color: white;
-    border: 1.2px solid var(--black);
+    border: 1px solid var(--black);
 }
 
 .bout-fighter-name {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
 }
 
 .bout-side-east .bout-fighter-name {
@@ -602,26 +602,26 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 9px;
+    margin-bottom: 6px;
 }
 
 .bout-basho {
     font-weight: 600;
     color: var(--japanese-blue);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .bout-day {
     color: #666;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
 }
 
 .bout-matchup {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
 .bout-side {
@@ -637,7 +637,7 @@ button:hover {
 .bout-record {
     color: var(--japanese-blue);
     font-weight: 600;
-    font-size: 0.6rem;
+    font-size: 0.55rem;
 }
 
 .bout-vs {
@@ -649,8 +649,8 @@ button:hover {
     text-align: center;
     font-style: italic;
     color: #666;
-    font-size: 0.75rem;
-    margin-top: 6px;
+    font-size: 0.65rem;
+    margin-top: 4px;
 }
 
 .no-bouts {
@@ -727,35 +727,35 @@ button:hover {
 /* Basho Card Styles */
 .basho-card {
     background: var(--white);
-    padding: 12px;
-    margin-bottom: 9px;
-    border-radius: 6px;
-    border-left: 3px solid var(--japanese-blue);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    border-left: 2px solid var(--japanese-blue);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .basho-card:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .basho-card h3 {
     color: var(--japanese-blue);
-    margin-bottom: 6px;
-    font-size: 1.1rem;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
 }
 
 .basho-header {
-    margin-bottom: 18px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--gray-border);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-border);
 }
 
 .basho-name-section h2 {
-    margin: 0 0 12px 0;
-    font-size: 1.5rem;
+    margin: 0 0 8px 0;
+    font-size: 1.3rem;
     color: var(--japanese-blue);
     border: none;
     padding: 0;
@@ -764,63 +764,63 @@ button:hover {
 .basho-info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 9px;
-    margin-top: 9px;
+    gap: 6px;
+    margin-top: 6px;
 }
 
 /* Awards Section */
 .awards-section {
-    margin: 18px 0;
-    padding: 18px;
+    margin: 12px 0;
+    padding: 12px;
     background: var(--white);
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
 }
 
 .awards-section h3 {
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     color: var(--japanese-blue);
-    font-size: 1.2rem;
-    border-bottom: 2px solid var(--gray-border);
-    padding-bottom: 9px;
+    font-size: 1.05rem;
+    border-bottom: 1px solid var(--gray-border);
+    padding-bottom: 6px;
 }
 
 .awards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 18px;
-    margin-top: 18px;
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .award-card {
-    padding: 12px;
+    padding: 8px;
     border: 1px solid var(--gray-border);
-    border-radius: 6px;
+    border-radius: 4px;
     background: var(--light-gray);
 }
 
 .award-card h4 {
-    margin: 0 0 9px 0;
+    margin: 0 0 6px 0;
     color: var(--japanese-blue);
-    font-size: 1rem;
-    padding-bottom: 6px;
+    font-size: 0.9rem;
+    padding-bottom: 4px;
     border-bottom: 1px solid var(--gray-border);
 }
 
 .award-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .award-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 9px;
+    padding: 4px 6px;
     background: var(--white);
-    border-radius: 4px;
-    font-size: 0.9rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
 }
 
 .award-rikishi {
@@ -834,20 +834,20 @@ button:hover {
 }
 
 .award-detail {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--gray-text);
 }
 
 .day-section {
-    margin-bottom: 18px;
+    margin-bottom: 12px;
 }
 
 .day-section h3 {
     color: var(--japanese-blue);
-    margin-bottom: 9px;
-    font-size: 1rem;
-    padding-bottom: 6px;
-    border-bottom: 2px solid var(--gray-border);
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--gray-border);
 }
 
 /* Banzuke Styles */
@@ -857,29 +857,29 @@ button:hover {
 
 .banzuke-filters {
     display: flex;
-    gap: 9px;
-    margin-bottom: 18px;
-    padding: 12px;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 8px;
     background: var(--white);
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
 }
 
 .banzuke-filters select {
     flex: 1;
-    max-width: 180px;
+    max-width: 126px;
 }
 
 .division-section {
-    margin-bottom: 24px;
+    margin-bottom: 17px;
 }
 
 .division-section h3 {
     color: var(--japanese-blue);
-    margin-bottom: 12px;
-    font-size: 1.1rem;
-    padding-bottom: 6px;
-    border-bottom: 2px solid var(--gray-border);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--gray-border);
     text-align: center;
 }
 
@@ -890,9 +890,9 @@ button:hover {
 
 .banzuke-row {
     display: grid;
-    grid-template-columns: 60px 1fr auto 1fr 60px;
-    gap: 12px;
-    padding: 9px 0;
+    grid-template-columns: 42px 1fr auto 1fr 42px;
+    gap: 8px;
+    padding: 6px 0;
     border-bottom: 1px solid var(--gray-border);
     align-items: center;
 }
@@ -900,7 +900,7 @@ button:hover {
 .banzuke-result {
     text-align: center;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--japanese-blue);
 }
 
@@ -909,8 +909,8 @@ button:hover {
 }
 
 .banzuke-side {
-    padding: 9px;
-    border-radius: 5px;
+    padding: 6px;
+    border-radius: 3px;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -920,7 +920,7 @@ button:hover {
 
 .banzuke-side.clickable:hover {
     background: var(--gray-light);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .banzuke-side.empty {
@@ -936,50 +936,50 @@ button:hover {
 }
 
 .banzuke-rikishi-name {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--black);
-    margin-bottom: 3px;
-}
-
-.banzuke-rikishi-jp {
-    font-size: 0.75rem;
-    color: #666;
     margin-bottom: 2px;
 }
 
+.banzuke-rikishi-jp {
+    font-size: 0.65rem;
+    color: #666;
+    margin-bottom: 1px;
+}
+
 .banzuke-rikishi-heya {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: #999;
 }
 
 .banzuke-empty {
     color: #ccc;
-    font-size: 1rem;
+    font-size: 0.85rem;
 }
 
 .banzuke-rank-center {
     position: relative;
     text-align: center;
-    padding: 6px 12px;
+    padding: 4px 8px;
     background: var(--japanese-blue);
     color: var(--white);
-    border-radius: 5px;
-    min-width: 90px;
+    border-radius: 3px;
+    min-width: 63px;
 }
 
 .rank-name {
     font-weight: 700;
-    font-size: 0.75rem;
-    margin-bottom: 3px;
-    padding-right: 24px;
+    font-size: 0.65rem;
+    margin-bottom: 2px;
+    padding-right: 17px;
 }
 
 .rank-number {
     position: absolute;
-    top: 6px;
-    right: 12px;
-    font-size: 0.75rem;
+    top: 4px;
+    right: 8px;
+    font-size: 0.65rem;
     font-weight: 700;
 }
 

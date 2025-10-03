@@ -23,12 +23,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Setup event listeners
 function setupEventListeners() {
-    if (searchBtn) searchBtn.addEventListener('click', handleSearch);
+    let searchTimeout;
+
     if (clearBtn) clearBtn.addEventListener('click', handleClear);
+
     if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSearch();
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                handleSearch();
+            }, 300);
         });
+    }
+
+    if (heyaFilter) {
+        heyaFilter.addEventListener('change', handleSearch);
+    }
+
+    if (divisionFilter) {
+        divisionFilter.addEventListener('change', handleSearch);
+    }
+
+    if (rankFilter) {
+        rankFilter.addEventListener('change', handleSearch);
     }
 }
 

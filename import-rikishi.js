@@ -17,7 +17,7 @@ const pool = new Pool({
 // Fetch individual rikishi by ID
 function fetchRikishiById(id) {
     return new Promise((resolve, reject) => {
-        const url = `https://sumo-api.com/api/rikishi/${id}?measurements=true&ranks=true&intai=true`;
+        const url = `https://sumo-api.com/api/rikishi/${id}?measurements=true&ranks=true&shikona=true&intai=true`;
 
         https.get(url, (res) => {
             let data = '';
@@ -49,7 +49,7 @@ function fetchRikishiById(id) {
 // Fetch data from sumo-api.com with pagination (to get total count)
 function fetchRikishiPage(skip = 0) {
     return new Promise((resolve, reject) => {
-        const url = `https://sumo-api.com/api/rikishis?limit=1000&skip=${skip}&measurements=true&ranks=true&intai=true`;
+        const url = `https://sumo-api.com/api/rikishis?limit=1000&skip=${skip}`;
 
         https.get(url, (res) => {
             let data = '';
@@ -77,7 +77,7 @@ async function fetchAllRikishiData() {
     // First, get total count from the API
     console.log('Getting total rikishi count from API...');
     const initialResponse = await fetchRikishiPage(0);
-    const totalReported = initialResponse.total || 9101;
+    const totalReported = initialResponse.total;
     console.log(`API reports ${totalReported} total rikishi`);
 
     const allRikishis = [];
@@ -85,7 +85,7 @@ async function fetchAllRikishiData() {
     const maxNotFound = 100; // Stop after 100 consecutive 404s
 
     // Start from ID 1 and iterate
-    for (let id = 1; id <= totalReported + 1000; id++) {
+    for (let id = 1; id <= totalReported + 900; id++) {
         const rikishi = await fetchRikishiById(id);
 
         if (rikishi === null) {
@@ -133,6 +133,7 @@ async function importRikishi() {
         let skipped = 0;
         let measurementsImported = 0;
         let ranksImported = 0;
+        let shikonaImported = 0;
 
         // Process rikishi one by one
         for (const rikishi of rikishis) {
@@ -264,6 +265,38 @@ async function importRikishi() {
                             }
                         }
 
+                        // Import shikona history if available - batch insert
+                        if (rikishi.shikonaHistory && rikishi.shikonaHistory.length > 0) {
+                            // Delete old shikona for this rikishi
+                            await client.query('DELETE FROM shikona WHERE rikishi_id = $1', [rikishiId]);
+
+                            // Batch insert shikona
+                            const shikonaValues = [];
+                            const shikonaParams = [];
+                            let paramIndex = 1;
+
+                            for (const shikona of rikishi.shikonaHistory) {
+                                shikonaValues.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3}, $${paramIndex + 4}, $${paramIndex + 5})`);
+                                shikonaParams.push(
+                                    rikishiId,
+                                    shikona.shikonaEn,
+                                    shikona.shikonaJp,
+                                    shikona.dateStart,
+                                    shikona.dateEnd,
+                                    shikona.current || false
+                                );
+                                paramIndex += 6;
+                                shikonaImported++;
+                            }
+
+                            if (shikonaValues.length > 0) {
+                                await client.query(`
+                                    INSERT INTO shikona (rikishi_id, shikona_en, shikona_jp, date_start, date_end, current)
+                                    VALUES ${shikonaValues.join(', ')}
+                                `, shikonaParams);
+                            }
+                        }
+
                 imported++;
 
                 if (imported % 100 === 0) {
@@ -279,6 +312,7 @@ async function importRikishi() {
         console.log(`Successfully imported: ${imported}`);
         console.log(`Ranks imported: ${ranksImported}`);
         console.log(`Measurements imported: ${measurementsImported}`);
+        console.log(`Shikona imported: ${shikonaImported}`);
         console.log(`Skipped: ${skipped}`);
 
         // Display some statistics

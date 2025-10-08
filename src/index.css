@@ -494,6 +494,76 @@ button:hover {
     background: #b91c1c;
 }
 
+.banzuke-grid {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.banzuke-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    padding: 12px;
+    background: var(--japanese-blue);
+    color: white;
+    font-weight: bold;
+    border-radius: 6px 6px 0 0;
+    text-align: center;
+}
+
+.banzuke-rank-header {
+    min-width: 150px;
+}
+
+.banzuke-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    padding: 12px;
+    border-bottom: 1px solid var(--gray-border);
+    align-items: center;
+}
+
+.banzuke-row:hover {
+    background: var(--gray-light);
+}
+
+.banzuke-east {
+    text-align: right;
+    font-weight: 600;
+    padding-right: 10px;
+}
+
+.banzuke-rank {
+    text-align: center;
+    font-weight: 700;
+    color: var(--japanese-blue);
+    min-width: 150px;
+    font-size: 0.95rem;
+}
+
+.banzuke-west {
+    text-align: left;
+    font-weight: 600;
+    padding-left: 10px;
+}
+
+.banzuke-record {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 3px;
+    font-weight: 500;
+}
+
+.banzuke-birthplace {
+    font-size: 0.7rem;
+    color: #999;
+    margin-top: 2px;
+    font-style: italic;
+}
+
 .rikishi-header {
     display: flex;
     gap: 18px;
@@ -905,14 +975,6 @@ button:hover {
     margin: 0 auto;
 }
 
-.banzuke-row {
-    display: grid;
-    grid-template-columns: 42px 1fr auto 1fr 42px;
-    gap: 8px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--gray-border);
-    align-items: center;
-}
 
 .banzuke-result {
     text-align: center;
@@ -1265,4 +1327,98 @@ button:hover {
 .shikona-dates {
     color: #666;
     font-size: 0.9rem;
+}
+
+/* Rikishi Table Spreadsheet Styles */
+.rikishi-table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.rikishi-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rikishi-table thead {
+    background: var(--japanese-blue);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.rikishi-table th {
+    padding: 12px 16px;
+    text-align: left;
+    transition: background-color 0.2s;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rikishi-table th:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.rikishi-table th:last-child {
+    border-right: none;
+}
+
+.rikishi-table tbody tr {
+    border-bottom: 1px solid var(--gray-border);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.rikishi-table tbody tr:hover {
+    background-color: var(--gray-light);
+}
+
+.rikishi-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.rikishi-table tbody tr:nth-child(even):hover {
+    background-color: var(--gray-light);
+}
+
+.rikishi-table td {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-right: 1px solid var(--gray-border);
+}
+
+.rikishi-table td:last-child {
+    border-right: none;
+}
+
+.rikishi-name {
+    font-weight: 600;
+    color: var(--japanese-blue);
+}
+
+.rikishi-name-jp {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.delete-btn-table {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.delete-btn-table:hover {
+    background: #b91c1c;
 }

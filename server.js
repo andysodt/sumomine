@@ -60,7 +60,14 @@ pool.query('SELECT NOW()', (err, res) => {
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+
+// Serve static assets from dist folder (React build)
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Serve static assets (images, etc) from root
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/logo.svg', express.static(path.join(__dirname, 'logo.svg')));
+app.use('/favicon.svg', express.static(path.join(__dirname, 'favicon.svg')));
 
 // API Routes
 
@@ -266,6 +273,21 @@ app.get('/api/rikishis/:id/ranks', async (req, res) => {
     }
 });
 
+// Get shikona history for a rikishi
+app.get('/api/rikishis/:id/shikona', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            'SELECT * FROM shikona WHERE rikishi_id = $1 ORDER BY date_start DESC',
+            [id]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch shikona' });
+    }
+});
+
 // Get bouts for a rikishi (by shikona name)
 app.get('/api/rikishis/:id/bouts', async (req, res) => {
     try {
@@ -419,7 +441,35 @@ app.get('/api/banzuke/:bashoId', async (req, res) => {
     try {
         const { bashoId } = req.params;
         const result = await pool.query(
-            'SELECT * FROM banzuke WHERE basho_id = $1 ORDER BY rank_value',
+            `SELECT
+                b.*,
+                r.shusshin as birthplace,
+                COALESCE(
+                    (SELECT COUNT(*)
+                     FROM bouts
+                     WHERE basho_id = $1
+                     AND winner_en IS NOT NULL
+                     AND (
+                         (east_shikona = b.shikona_en AND winner_en = b.shikona_en)
+                         OR (west_shikona = b.shikona_en AND winner_en = b.shikona_en)
+                     )
+                    ), 0
+                ) as wins,
+                COALESCE(
+                    (SELECT COUNT(*)
+                     FROM bouts
+                     WHERE basho_id = $1
+                     AND winner_en IS NOT NULL
+                     AND (
+                         (east_shikona = b.shikona_en AND winner_en != b.shikona_en)
+                         OR (west_shikona = b.shikona_en AND winner_en != b.shikona_en)
+                     )
+                    ), 0
+                ) as losses
+             FROM banzuke b
+             LEFT JOIN rikishis r ON b.shikona_en = r.shikona_en
+             WHERE b.basho_id = $1
+             ORDER BY b.rank_value`,
             [bashoId]
         );
         res.json(result.rows);
@@ -554,41 +604,6 @@ app.delete('/api/matches/:id', async (req, res) => {
     }
 });
 
-// Serve index.html for root path
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Serve rikishi list page
-app.get('/rikishi-list.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'rikishi-list.html'));
-});
-
-// Serve rikishi details page
-app.get('/rikishi.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'rikishi.html'));
-});
-
-// Serve basho list page
-app.get('/basho-list.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'basho-list.html'));
-});
-
-// Serve basho details page
-app.get('/basho.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'basho.html'));
-});
-
-// Serve banzuke list page
-app.get('/banzuke-list.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'banzuke-list.html'));
-});
-
-// Serve banzuke details page
-app.get('/banzuke.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'banzuke.html'));
-});
-
 // Image upload endpoint
 app.post('/api/upload-image', upload.single('image'), async (req, res) => {
     try {
@@ -617,6 +632,260 @@ app.post('/api/upload-image', upload.single('image'), async (req, res) => {
         console.error('Upload error:', err);
         res.status(500).json({ error: 'Failed to upload image' });
     }
+});
+
+// Import rikishi from sumo-api.com
+app.post('/api/rikishis/import', async (req, res) => {
+    const https = require('https');
+    const client = await pool.connect();
+
+    try {
+        // Set response headers for streaming
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        const sendProgress = (message) => {
+            res.write(`data: ${JSON.stringify({ message })}\n\n`);
+        };
+
+        // Fetch individual rikishi by ID
+        const fetchRikishiById = (id) => {
+            return new Promise((resolve, reject) => {
+                const url = `https://sumo-api.com/api/rikishi/${id}?measurements=true&ranks=true&shikona=true&intai=true`;
+                https.get(url, (apiRes) => {
+                    let data = '';
+                    apiRes.on('data', (chunk) => { data += chunk; });
+                    apiRes.on('end', () => {
+                        if (apiRes.statusCode === 404 || apiRes.statusCode === 204) {
+                            resolve(null);
+                        } else if (apiRes.statusCode !== 200) {
+                            reject(new Error(`HTTP ${apiRes.statusCode}`));
+                        } else {
+                            try {
+                                resolve(JSON.parse(data));
+                            } catch (error) {
+                                reject(error);
+                            }
+                        }
+                    });
+                }).on('error', reject);
+            });
+        };
+
+        // Fetch page to get total count
+        const fetchRikishiPage = (skip = 0) => {
+            return new Promise((resolve, reject) => {
+                const url = `https://sumo-api.com/api/rikishis?limit=1000&skip=${skip}`;
+                https.get(url, (apiRes) => {
+                    let data = '';
+                    apiRes.on('data', (chunk) => { data += chunk; });
+                    apiRes.on('end', () => {
+                        try {
+                            resolve(JSON.parse(data));
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
+                }).on('error', reject);
+            });
+        };
+
+        sendProgress('Fetching rikishi count from API...');
+        const initialResponse = await fetchRikishiPage(0);
+        const totalReported = initialResponse.total;
+        sendProgress(`API reports ${totalReported} total rikishi`);
+
+        const allRikishis = [];
+        let consecutiveNotFound = 0;
+        const maxNotFound = 100;
+
+        // Fetch all rikishi
+        for (let id = 1; id <= totalReported + 900; id++) {
+            const rikishi = await fetchRikishiById(id);
+
+            if (rikishi === null) {
+                consecutiveNotFound++;
+                if (consecutiveNotFound >= maxNotFound) {
+                    sendProgress(`Stopping: ${maxNotFound} consecutive IDs not found`);
+                    break;
+                }
+            } else {
+                consecutiveNotFound = 0;
+                allRikishis.push(rikishi);
+
+                if (allRikishis.length % 100 === 0) {
+                    sendProgress(`Fetched ${allRikishis.length} rikishi (ID ${id})...`);
+                }
+            }
+
+            if (id % 10 === 0) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        sendProgress(`Fetching complete: ${allRikishis.length} records fetched`);
+        sendProgress('Starting database import...');
+
+        let imported = 0;
+        let skipped = 0;
+        let measurementsImported = 0;
+        let ranksImported = 0;
+        let shikonaImported = 0;
+
+        // Import rikishi
+        for (const rikishi of allRikishis) {
+            try {
+                let birthDate = null;
+                if (rikishi.birthDate) {
+                    birthDate = new Date(rikishi.birthDate).toISOString().split('T')[0];
+                }
+
+                let rikishiId;
+                let existingRikishi;
+
+                if (rikishi.sumodbId) {
+                    existingRikishi = await client.query(
+                        'SELECT id FROM rikishis WHERE sumo_db_id = $1 LIMIT 1',
+                        [rikishi.sumodbId]
+                    );
+                } else {
+                    existingRikishi = await client.query(
+                        'SELECT id FROM rikishis WHERE shikona_en = $1 AND (debut = $2 OR debut IS NULL) LIMIT 1',
+                        [rikishi.shikonaEn, rikishi.debut]
+                    );
+                }
+
+                if (existingRikishi.rows.length > 0) {
+                    rikishiId = existingRikishi.rows[0].id;
+                    await client.query(`
+                        UPDATE rikishis SET
+                            sumo_db_id = $1, nsk_id = $2, shikona_jp = $3,
+                            current_rank = $4, heya = $5, birth_date = $6,
+                            shusshin = $7, height = $8, weight = $9, debut = $10,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE id = $11
+                    `, [
+                        rikishi.sumodbId, rikishi.nskId, rikishi.shikonaJp,
+                        rikishi.currentRank, rikishi.heya, birthDate,
+                        rikishi.shusshin, rikishi.height, rikishi.weight,
+                        rikishi.debut, rikishiId
+                    ]);
+                } else {
+                    const result = await client.query(`
+                        INSERT INTO rikishis (
+                            sumo_db_id, nsk_id, shikona_en, shikona_jp,
+                            current_rank, heya, birth_date, shusshin,
+                            height, weight, debut
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                        RETURNING id
+                    `, [
+                        rikishi.sumodbId, rikishi.nskId, rikishi.shikonaEn,
+                        rikishi.shikonaJp, rikishi.currentRank, rikishi.heya,
+                        birthDate, rikishi.shusshin, rikishi.height,
+                        rikishi.weight, rikishi.debut
+                    ]);
+                    rikishiId = result.rows[0].id;
+                }
+
+                // Import rank history
+                if (rikishi.rankHistory && rikishi.rankHistory.length > 0) {
+                    await client.query('DELETE FROM ranks WHERE rikishi_id = $1', [rikishiId]);
+                    const rankValues = [];
+                    const rankParams = [];
+                    let paramIndex = 1;
+
+                    for (const rankEntry of rikishi.rankHistory) {
+                        rankValues.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3})`);
+                        rankParams.push(rikishiId, rankEntry.bashoId, rankEntry.rankValue, rankEntry.rank);
+                        paramIndex += 4;
+                        ranksImported++;
+                    }
+
+                    if (rankValues.length > 0) {
+                        await client.query(`
+                            INSERT INTO ranks (rikishi_id, basho_id, rank_value, rank)
+                            VALUES ${rankValues.join(', ')}
+                        `, rankParams);
+                    }
+                }
+
+                // Import measurement history
+                if (rikishi.measurementHistory && rikishi.measurementHistory.length > 0) {
+                    await client.query('DELETE FROM measurements WHERE rikishi_id = $1', [rikishiId]);
+                    const measurementValues = [];
+                    const measurementParams = [];
+                    let paramIndex = 1;
+
+                    for (const measurement of rikishi.measurementHistory) {
+                        measurementValues.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3})`);
+                        measurementParams.push(rikishiId, measurement.bashoId, measurement.height, measurement.weight);
+                        paramIndex += 4;
+                        measurementsImported++;
+                    }
+
+                    if (measurementValues.length > 0) {
+                        await client.query(`
+                            INSERT INTO measurements (rikishi_id, basho_id, height, weight)
+                            VALUES ${measurementValues.join(', ')}
+                        `, measurementParams);
+                    }
+                }
+
+                // Import shikona history
+                if (rikishi.shikonaHistory && rikishi.shikonaHistory.length > 0) {
+                    await client.query('DELETE FROM shikona WHERE rikishi_id = $1', [rikishiId]);
+                    const shikonaValues = [];
+                    const shikonaParams = [];
+                    let paramIndex = 1;
+
+                    for (const shikona of rikishi.shikonaHistory) {
+                        shikonaValues.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3}, $${paramIndex + 4}, $${paramIndex + 5})`);
+                        shikonaParams.push(
+                            rikishiId, shikona.shikonaEn, shikona.shikonaJp,
+                            shikona.dateStart, shikona.dateEnd, shikona.current || false
+                        );
+                        paramIndex += 6;
+                        shikonaImported++;
+                    }
+
+                    if (shikonaValues.length > 0) {
+                        await client.query(`
+                            INSERT INTO shikona (rikishi_id, shikona_en, shikona_jp, date_start, date_end, current)
+                            VALUES ${shikonaValues.join(', ')}
+                        `, shikonaParams);
+                    }
+                }
+
+                imported++;
+
+                if (imported % 100 === 0) {
+                    sendProgress(`Imported ${imported} rikishi...`);
+                }
+            } catch (error) {
+                console.error(`Error importing ${rikishi.shikonaEn}:`, error.message);
+                skipped++;
+            }
+        }
+
+        sendProgress(`Import complete: ${imported} rikishi imported`);
+        sendProgress(`Ranks: ${ranksImported}, Measurements: ${measurementsImported}, Shikona: ${shikonaImported}`);
+        sendProgress(`Skipped: ${skipped}`);
+
+        res.write('data: {"done": true}\n\n');
+        res.end();
+    } catch (error) {
+        console.error('Import error:', error);
+        res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+        res.end();
+    } finally {
+        client.release();
+    }
+});
+
+// Catch-all route to serve React app for any non-API routes (must be last)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Start server

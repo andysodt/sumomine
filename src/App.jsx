@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import RikishiList from './pages/RikishiList';
 import RikishiDetails from './pages/RikishiDetails';
 import BashoDetails from './pages/BashoDetails';
-import BanzukeList from './pages/BanzukeList';
 import BanzukeDetails from './pages/BanzukeDetails';
 import RankProgression from './pages/RankProgression';
 import MeasurementProgression from './pages/MeasurementProgression';
@@ -21,7 +20,7 @@ function App() {
         <Route path="rikishi/:id" element={<RikishiDetails />} />
         <Route path="basho" element={<BashoDetails />} />
         <Route path="basho/:id" element={<BashoDetails />} />
-        <Route path="banzuke" element={<BanzukeList />} />
+        <Route path="banzuke" element={<BanzukeDetails />} />
         <Route path="banzuke/:id" element={<BanzukeDetails />} />
         <Route path="rank-progression" element={<RankProgression />} />
         <Route path="measurement-progression" element={<MeasurementProgression />} />

@@ -40,37 +40,22 @@ function BashoDetails() {
   const loadBashoDetails = async (bashoId) => {
     try {
       setLoading(true);
-      const boutsData = await apiCall(`/api/basho/${bashoId}/bouts`);
+      const [bashoData, boutsData, allBoutsData] = await Promise.all([
+        apiCall(`/api/basho/${bashoId}`),
+        apiCall(`/api/basho/${bashoId}/bouts`),
+        apiCall('/api/bouts/all')
+      ]);
 
-      const basho = bashoList.find(b => b.basho_id === bashoId);
-      setBashoInfo(basho);
+      setBashoInfo(bashoData);
       setBouts(boutsData || []);
 
-      // Load all bouts for head-to-head calculation
-      await loadAllBouts(bashoId);
+      // Filter all bouts to only include up to current basho
+      const filtered = allBoutsData.filter(b => b.basho_id <= bashoId);
+      setAllBouts(filtered);
     } catch (error) {
       console.error('Failed to load basho details:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadAllBouts = async (currentBashoId) => {
-    try {
-      // Get all bashos up to the current one
-      const previousBashos = bashoList.filter(b => b.basho_id <= currentBashoId);
-
-      // Fetch bouts from all previous bashos
-      const allBoutsPromises = previousBashos.map(b =>
-        apiCall(`/api/basho/${b.basho_id}/bouts`).catch(() => [])
-      );
-
-      const allBoutsArrays = await Promise.all(allBoutsPromises);
-      const combined = allBoutsArrays.flat();
-      setAllBouts(combined);
-    } catch (error) {
-      console.error('Failed to load all bouts:', error);
-      setAllBouts([]);
     }
   };
 
